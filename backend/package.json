@@ -1,0 +1,39 @@
+{
+  "name": "krawumms-backend",
+  "version": "1.0.0",
+  "description": "Api of the famous krawumms app.",
+  "main": "index.ts",
+  "author": "TheDadi",
+  "license": "MIT",
+  "repository": "https://github.com/krawumms/krawumms.git",
+  "private": false,
+  "dependencies": {
+    "fastify": "^2.13.0",
+    "fastify-blipp": "^2.2.1",
+    "fastify-cors": "^3.0.2",
+    "fastify-plugin": "^1.6.1",
+    "fastify-swagger": "^2.5.0",
+    "http-status-codes": "^1.4.0",
+    "mongoose": "^5.9.5",
+    "mongoose-hidden": "^1.8.1",
+    "pino-pretty": "^3.6.1",
+    "source-map-support": "^0.5.16",
+    "uuid": "^7.0.2"
+  },
+  "scripts": {
+    "build": "rm -rf dist && tsc --sourceMap -p ./",
+    "dev": "cross-env DEBUG=*,-avvio ts-node-dev --respawn ./src/index.ts",
+    "start": "node ./dist/index.js"
+  },
+  "engines": {
+    "node": "12.x"
+  },
+  "devDependencies": {
+    "@types/mongodb": "^3.5.2",
+    "@types/mongoose": "^5.7.7",
+    "@types/uuid": "^7.0.2",
+    "cross-env": "^7.0.2",
+    "debug": "^4.1.1",
+    "typescript": "^3.8.3"
+  }
+}
