@@ -1,0 +1,23 @@
+# Description
+
+# Issue Link
+
+
+# Checklist
+
+Prior to approving and merging this PR every reviewer must make sure that the following points are addressed.
+
+- The REST APIs introduced in this PR are following the guidelines
+- The architecture documents are updated
+- The PR includes unit tests that cover the functionality introduced/modified in a broad enough way
+- Code is ...
+  - well designed
+  - readable by others
+  - doing what the author intended
+  - no more complex than needed
+  - not degrading system code health
+  - commented with the why vs. what
+  - appropriately tested
+  - sufficiently documented
+
+# Testing notes
