@@ -22,8 +22,11 @@
   },
   "scripts": {
     "build": "rm -rf dist && tsc --sourceMap -p ./",
+    "build:lcov": "yarn lint && yarn test:lcov && yarn build",
     "dev": "cross-env DEBUG=*,-avvio ts-node-dev --respawn ./src/index.ts",
     "start": "node ./dist/index.js",
+    "test": "cross-env NODE_ENV=test jest",
+    "test:lcov": "cross-env NODE_ENV=test jest --coverage --coverageReporters lcov --coverageDirectory ../../coverage",
     "lint": "tsc --noEmit && eslint '*/**/*.{js,ts,tsx}'"
   },
   "engines": {
