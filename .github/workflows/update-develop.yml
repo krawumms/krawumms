@@ -1,0 +1,31 @@
+name: Update develop
+
+on:
+  push:
+    branches: [master]
+
+jobs:
+  update_develop:
+    runs-on: ubuntu-16.04
+    steps:
+      - name: Update develop
+        timeout-minutes: 2
+        run: |
+          ORG="krawumms"
+          REPO="krawumms"
+          BRANCH="$(echo "${{ github.ref }}" | sed "s|refs/heads/||")"
+
+          cat > ./data.json <<EOF
+          {
+            "base": "develop",
+            "head": "master",
+            "commit_message": "Update develop from master"
+          }
+          EOF
+
+          # must use KRAWUMMS_GITHUB_API_KEY here as commits made using GITHUB_TOKEN won't trigger new workflow runs
+          curl -X POST \
+            -H 'Authorization: Bearer ${{ secrets.KRAWUMMS_GITHUB_API_KEY }}' \
+            --data @./data.json \
+            -v \
+            "https://api.github.com/repos/$ORG/$REPO/merges"

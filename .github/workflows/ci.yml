@@ -1,0 +1,116 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - master
+      - develop
+  pull_request:
+    branches:
+      - "*"
+
+jobs:
+  git-update:
+    timeout-minutes: 2
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1.2.0 # need to stick with version <2 as V2 only checks out the targeted ref shallowly (-depth 1)
+        if: github.event_name == 'pull_request'
+        with:
+          ref: "${{ github.head_ref }}"
+      - name: update head with latest changes from base
+        if: github.event_name == 'pull_request'
+        run: |
+          if [[ "${{ github.event.action }}" == "rerequested" ]]; then
+            if [[ "${{ github.event.check_suite.pull_requests[1].number }}" != "" ]]; then
+              echo "Got two PRs in github.event.check_suite.pull_requests"
+              exit 1
+            fi
+
+            BASE_SHA="${{ github.event.check_suite.pull_requests[0].base.sha }}"
+            PR_NUMBER="${{ github.event.check_suite.pull_requests[0].number }}"
+          elif [[ "${{ github.event.action }}" == "synchronize" || "${{ github.event.action }}" == "opened" || "${{ github.event.action }}" == "reopened" ]]; then
+            BASE_SHA="${{ github.event.pull_request.base.sha }}"
+            PR_NUMBER="${{ github.event.pull_request.number }}"
+          else
+            echo "Unknown event action ${{ github.event.action }}"
+            exit 1
+          fi
+
+          # check whether github.base_ref (PR target) is part of current branch (see https://stackoverflow.com/a/43535203/2164347)
+          EXIT=0
+          RESULT="$(git merge-base --is-ancestor $BASE_SHA HEAD 2>&1)" || EXIT=$?
+          if [ "$EXIT" == "0" ]; then
+            echo "PR seems up to date :)";
+          elif [[ "$RESULT" == "" ]]; then
+            echo "Updating PR...";
+            ORG=krawumms
+            REPO=krawumms
+            curl -X PUT \
+              -H 'Authorization: Bearer ${{ secrets.KRAWUMMS_GITHUB_API_KEY }}' \
+              -H 'Accept: application/vnd.github.lydian-preview+json' \
+              "https://api.github.com/repos/$ORG/$REPO/pulls/$PR_NUMBER/update-branch"
+
+            exit 1
+          else
+            echo "$RESULT"
+            exit $EXIT
+          fi
+  frontend:
+    timeout-minutes: 60
+    needs: [git-update]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          lfs: true
+        timeout-minutes: 2
+      - name: docker login
+        timeout-minutes: 1
+        run: |
+          if [[ "${{ secrets.DOCKER_HUB_KRAWUMMSBOT_USER }}" == "" ]]; then
+            echo "secrets.DOCKER_HUB_KRAWUMMSBOT_USER is empty!"
+            exit 1
+          fi
+          if [[ "${{ secrets.DOCKER_HUB_KRAWUMMS_PASSWORD }}" == "" ]]; then
+            echo "secrets.DOCKER_HUB_KRAWUMMS_PASSWORD is empty!"
+            exit 1
+          fi
+          docker login -u ${{ secrets.DOCKER_HUB_KRAWUMMSBOT_USER }} -p ${{ secrets.DOCKER_HUB_KRAWUMMS_PASSWORD }}
+      - name: Setup env vars
+        timeout-minutes: 1
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: ./.github/workflows/setup-env-vars.sh
+      - name: frontend
+        timeout-minutes: 10
+        run: ./.github/workflows/build-frontend.sh frontend krawumms-frontend "${{ secrets.CODECOV_TOKEN }}"
+  backend:
+    timeout-minutes: 40
+    needs: [git-update]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+        with:
+          lfs: true
+        timeout-minutes: 2
+      - name: docker login
+        timeout-minutes: 1
+        run: |
+          if [[ "${{ secrets.DOCKER_HUB_KRAWUMMSBOT_USER }}" == "" ]]; then
+            echo "secrets.DOCKER_HUB_KRAWUMMSBOT_USER is empty!"
+            exit 1
+          fi
+          if [[ "${{ secrets.DOCKER_HUB_KRAWUMMS_PASSWORD }}" == "" ]]; then
+            echo "secrets.DOCKER_HUB_KRAWUMMS_PASSWORD is empty!"
+            exit 1
+          fi
+          docker login -u ${{ secrets.DOCKER_HUB_KRAWUMMSBOT_USER }} -p ${{ secrets.DOCKER_HUB_KRAWUMMS_PASSWORD }}
+      - name: Setup env vars
+        timeout-minutes: 1
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: ./.github/workflows/setup-env-vars.sh
+      - name: backend
+        timeout-minutes: 7
+        run: ./.github/workflows/build-backend.sh backend krawumms-backend "${{ secrets.CODECOV_TOKEN }}"

@@ -1,0 +1,75 @@
+name: Update PRs
+
+on:
+  push:
+    branches: [branch-that-doesnt-exist-to-disable-to-not-trigger-too-many-builds]
+
+jobs:
+  update_prs:
+    runs-on: ubuntu-16.04
+    steps:
+      - name: Update PRs
+        timeout-minutes: 3
+        run: |
+          ORG="krawumms"
+          REPO="krawumms"
+          BRANCH="$(echo "${{ github.ref }}" | sed "s|refs/heads/||")"
+
+          echo "Finding PRs targeting branch $BRANCH"
+
+          QUERY_PR='pullRequests(states: [OPEN], first:100) { nodes { number, potentialMergeCommit { oid }, baseRef { name, target { oid } }, headRef { name, target { oid } } } }'
+          QUERY="{\"query\":\"query Query { repository(owner: \\\"$ORG\\\", name: \\\"$REPO\\\") { $QUERY_PR } }\"}"
+          
+          echo "QUERY_PR: $QUERY_PR"
+          echo "QUERY: $QUERY"
+          
+          STATUS=$(curl -w "%{http_code}" -o prs.json -H 'Authorization: Bearer ${{ secrets.KRAWUMMS_GITHUB_API_KEY }}' https://api.github.com/graphql --data "$QUERY")
+          
+          echo "STATUS: $STATUS"
+          if [[ "$STATUS" != "200" ]]; then
+            echo "HTTP error: $STATUS"
+            cat prs.json
+            exit 1
+          fi
+          
+          if [[ "$(cat prs.json | jq ".errors")" != "null" ]]; then
+            echo "GQL query failed!"
+            cat prs.json
+            exit 1
+          fi
+          
+          cat prs.json
+          
+          PRS=$(cat prs.json | jq -c ".data.repository.pullRequests.nodes[] | select(.baseRef.name == \"$BRANCH\")")
+          
+          echo "PRS: $PRS"
+          
+          while read pr; do
+            echo "$pr"
+            
+            if [[ "$pr" == "" ]]; then
+              continue;
+            fi
+            
+            PR_NUMBER="$(echo "$pr" | jq -r '.number')"
+            BASE_BRANCH="$(echo "$pr" | jq -r '.baseRef.name')"
+            BASE_SHA="$(echo "$pr" | jq -r '.baseRef.target.oid')"
+            HEAD_BRANCH="$(echo "$pr" | jq -r '.headRef.name')"
+            HEAD_SHA="$(echo "$pr" | jq -r '.headRef.target.oid')"
+            MERGE_COMMIT="$(echo "$pr" | jq -r '.potentialMergeCommit.oid')"
+            
+            echo "PR $PR_NUMBER wants to merge branch $HEAD_BRANCH into $BASE_BRANCH"
+            
+            if [[ "$MERGE_COMMIT" == "" ]]; then
+              echo "PR has merge conflicts, nothing we can do here..."
+            elif [[ "$MERGE_COMMIT" == "$HEAD_SHA" ]]; then
+              echo "The merge commit equals the head commit, nothing to do here"
+            else
+              echo "Should merge commit $BASE_SHA of $BASE_BRANCH into $HEAD_BRANCH"
+              # must use REGISTRY_CLEANUP_GH_PASSWORD here as commits made using GITHUB_TOKEN won't trigger new workflow runs
+              curl -X PUT \
+                -H 'Authorization: Bearer ${{ secrets.KRAWUMMS_GITHUB_API_KEY }}' \
+                -H 'Accept: application/vnd.github.lydian-preview+json' \
+                "https://api.github.com/repos/$ORG/$REPO/pulls/$PR_NUMBER/update-branch"
+            fi
+          done <<< "$PRS"
