@@ -1,0 +1,36 @@
+codecov:
+  require_ci_to_pass: yes
+
+comment:
+  after_n_builds: 2
+
+coverage:
+  status:
+    project:
+      default:
+        # basic
+        target: auto
+        threshold: 0.1
+        base: pr
+        # advanced
+        branches: null
+        if_no_uploads: error
+        if_not_found: success
+        if_ci_failed: error
+        only_pulls: false
+        flags: null
+        paths: null
+    patch:
+      default:
+        # basic
+        target: 95
+        threshold: null
+        base: pr
+        # advanced
+        branches: null
+        if_no_uploads: error
+        if_not_found: success
+        if_ci_failed: error
+        only_pulls: false
+        flags: null
+        paths: null
