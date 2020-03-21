@@ -114,3 +114,52 @@ jobs:
       - name: backend
         timeout-minutes: 7
         run: ./.github/workflows/build-backend.sh backend krawumms-backend "${{ secrets.CODECOV_TOKEN }}"
+  deploy:
+    timeout-minutes: 40
+    needs: [frontend, backend]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+        with:
+          lfs: true
+        timeout-minutes: 2
+      - name: Deploy frontend production
+        uses: amondnet/now-deployment@v2.0.1
+        if: github.ref == 'refs/heads/master' && github.event_name == 'push'
+        with:
+          zeit-token: ${{ secrets.NOW_TOKEN }}
+          github-token: ${{ secrets.KRAWUMMS_GITHUB_API_KEY }}
+          now-args: '--prod'
+          now-org-id: 'team_A9iIhNeYEb3CSeNY1tYjHnzI'
+          now-project-id: 'QmTgejAw7g4Ug54VMj8iPC7eD2koyHP3yf6Fw3tc7Vs4Cn'
+          working-directory: ./frontend
+      - name: Deploy frontend staging
+        uses: amondnet/now-deployment@v2.0.1
+        if: github.ref == 'refs/heads/develop' && github.event_name == 'push'
+        with:
+          zeit-token: ${{ secrets.NOW_TOKEN }}
+          github-token: ${{ secrets.KRAWUMMS_GITHUB_API_KEY }}
+          now-args: '--prod'
+          now-org-id: 'team_A9iIhNeYEb3CSeNY1tYjHnzI'
+          now-project-id: 'QmXBwGhptdvzGEX294WwfseBd3UhrD8XbB1PYQv4Tmzsp8'
+          working-directory: ./frontend
+      - name: Deploy backend production
+        uses: amondnet/now-deployment@v2.0.1
+        if: github.ref == 'refs/heads/master' && github.event_name == 'push'
+        with:
+          zeit-token: ${{ secrets.NOW_TOKEN }}
+          github-token: ${{ secrets.KRAWUMMS_GITHUB_API_KEY }}
+          now-args: '--prod'
+          now-org-id: 'team_A9iIhNeYEb3CSeNY1tYjHnzI'
+          now-project-id: 'QmZedC44yJeBV5KFcybJtu9QivTfmTbL7bTGPfpxrXj9Ef'
+          working-directory: ./backend
+      - name: Deploy backend staging
+        uses: amondnet/now-deployment@v2.0.1
+        if: github.ref == 'refs/heads/develop' && github.event_name == 'push'
+        with:
+          zeit-token: ${{ secrets.NOW_TOKEN }}
+          github-token: ${{ secrets.KRAWUMMS_GITHUB_API_KEY }}
+          now-args: '--prod'
+          now-org-id: 'team_A9iIhNeYEb3CSeNY1tYjHnzI'
+          now-project-id: 'QmZuBDPMUbygUgK39PXFvtuPs98kkZGUab8t5KG3rDykkb'
+          working-directory: ./backend
