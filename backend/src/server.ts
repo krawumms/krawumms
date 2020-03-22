@@ -4,10 +4,12 @@ import fastify from 'fastify';
 import fastifyBlipp from 'fastify-blipp';
 import fastifyCors from 'fastify-cors';
 import swagger from 'fastify-swagger';
+import fastifyCookie from 'fastify-cookie';
 import { IncomingMessage, Server, ServerResponse } from 'http';
 
 import SwaggerOptions from './swagger';
 import todoApi from './todo/api';
+import authApi from './auth/api';
 
 const server: fastify.FastifyInstance<Server, IncomingMessage, ServerResponse> = fastify({
   logger: {
@@ -21,6 +23,8 @@ if (process.env.NODE_ENV !== 'production') {
   server.register(fastifyCors);
 }
 
+server.register(fastifyCookie);
 server.register(todoApi);
+server.register(authApi);
 
 export default server;
