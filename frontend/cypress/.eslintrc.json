@@ -1,0 +1,13 @@
+{
+  "plugins": [
+    "cypress"
+  ],
+  "extends": [
+    "plugin:cypress/recommended"
+  ],
+  "rules": {
+    "cypress/no-force": "warn",
+    "cypress/assertion-before-screenshot": "warn",
+    "cypress/require-data-selectors": "warn"
+  }
+}
