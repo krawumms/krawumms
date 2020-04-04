@@ -9,3 +9,8 @@ export type Todo = {
   text: string;
   done: boolean;
 };
+
+export type Party = {
+  id: number;
+  name: string;
+};

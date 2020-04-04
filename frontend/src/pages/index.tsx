@@ -18,6 +18,11 @@ const IndexPage: NextPage = () => {
           <a>Login</a>
         </Link>
       </p>
+      <p>
+        <Link href="/parties">
+          <a>Parties</a>
+        </Link>
+      </p>
     </Layout>
   );
 };
