@@ -7,7 +7,7 @@ type Props = {
   data: Party;
 };
 
-const ListItem: React.FunctionComponent<Props> = ({ data }) => (
+const PartyListItem: React.FunctionComponent<Props> = ({ data }) => (
   <Link href="/parties/[id]" as={`/parties/${data.id}`}>
     <a>
       {data.id}: {data.name}
@@ -15,4 +15,4 @@ const ListItem: React.FunctionComponent<Props> = ({ data }) => (
   </Link>
 );
 
-export default ListItem;
+export default PartyListItem;

@@ -6,11 +6,11 @@ type ListDetailProps = {
   item: Party;
 };
 
-const ListDetail: React.FunctionComponent<ListDetailProps> = ({ item: party }) => (
+const PartyListDetail: React.FunctionComponent<ListDetailProps> = ({ item: party }) => (
   <div>
     <h1>Detail for {party.name}</h1>
     <p>ID: {party.id}</p>
   </div>
 );
 
-export default ListDetail;
+export default PartyListDetail;

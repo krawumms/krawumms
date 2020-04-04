@@ -7,7 +7,7 @@ type Props = {
   items: Party[];
 };
 
-const List: React.FunctionComponent<Props> = ({ items }) => (
+const PartyList: React.FunctionComponent<Props> = ({ items }) => (
   <ul>
     {items.map((item) => (
       <li key={item.id}>
@@ -17,4 +17,4 @@ const List: React.FunctionComponent<Props> = ({ items }) => (
   </ul>
 );
 
-export default List;
+export default PartyList;
