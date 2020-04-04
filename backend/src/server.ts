@@ -10,6 +10,7 @@ import { IncomingMessage, Server, ServerResponse } from 'http';
 import SwaggerOptions from './swagger';
 import todoApi from './todo/api';
 import authApi from './auth/api';
+import userApi from './user/api';
 
 const server: fastify.FastifyInstance<Server, IncomingMessage, ServerResponse> = fastify({
   logger: {
@@ -26,5 +27,5 @@ if (process.env.NODE_ENV !== 'production') {
 server.register(fastifyCookie);
 server.register(todoApi);
 server.register(authApi);
-
+server.register(userApi);
 export default server;
