@@ -23,5 +23,4 @@ describe('Test search api', () => {
     expect(response.status).toEqual(HttpStatus.OK);
     expect(Object.keys(response.body).length).toEqual(20);
   });
-
 });
