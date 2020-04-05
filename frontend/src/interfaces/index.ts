@@ -16,3 +16,8 @@ export type Track = {
   artists: string[];
   imgUrl: string;
 };
+  
+export type Party = {
+  id: number;
+  name: string;
+};

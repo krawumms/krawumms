@@ -11,6 +11,7 @@ import SwaggerOptions from './swagger';
 import todoApi from './todo/api';
 import authApi from './auth/api';
 import searchApi from './search/api';
+import partyApi from './party/api';
 
 const server: fastify.FastifyInstance<Server, IncomingMessage, ServerResponse> = fastify({
   logger: {
@@ -28,5 +29,6 @@ server.register(fastifyCookie);
 server.register(todoApi);
 server.register(authApi);
 server.register(searchApi);
+server.register(partyApi);
 
 export default server;
