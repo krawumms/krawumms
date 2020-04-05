@@ -1,6 +1,6 @@
 import fastifyPlugin from 'fastify-plugin';
 import HttpStatus from 'http-status-codes';
-import fetch from 'isomorphic-unfetch';
+import fetch from 'node-fetch';
 
 // temporary till token handling has been implemented properly
 const accessToken =
