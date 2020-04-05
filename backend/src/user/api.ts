@@ -35,7 +35,6 @@ export default fastifyPlugin(async (server, opts, next) => {
         id: uuid(),
         ...body,
       });
-
       return reply.code(HttpStatus.CREATED).send(user);
     } catch (error) {
       request.log.error(error);
@@ -49,7 +48,6 @@ export default fastifyPlugin(async (server, opts, next) => {
         params: { id },
       } = request;
       const user = await User.findOne({ id });
-
       if (!user) {
         reply.send(HttpStatus.NOT_FOUND);
       }
@@ -66,7 +64,6 @@ export default fastifyPlugin(async (server, opts, next) => {
         params: { id },
       } = request;
       const { deletedCount } = await User.deleteOne({ id });
-
       if (deletedCount) {
         reply.send(HttpStatus.OK);
       } else {

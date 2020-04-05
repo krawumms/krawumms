@@ -1,9 +1,10 @@
 import fastifyPlugin from 'fastify-plugin';
-import HttpStatus from 'http-status-codes';
+import HttpStatus, { NOT_FOUND } from 'http-status-codes';
 import { v4 as uuid } from 'uuid';
 import SpotifyWebApi from 'spotify-web-api-node';
-import { User } from '../user/model';
 import config from '../config';
+
+const axios = require('axios').default;
 
 const spotifyApi = new SpotifyWebApi({
   clientId: config.spotify.clientId,
@@ -64,14 +65,28 @@ export default fastifyPlugin(async (server, opts, next) => {
       const accessToken = spotifyApi.getAccessToken();
       const refreshToken = spotifyApi.getRefreshToken();
       const response = await spotifyApi.getMe();
-      const { body } = response;
       const { id } = response.body;
-      const user = await User.findOne({ id });
-      if (!user) {
-        await User.create({
-          id: uuid(),
-          ...body,
+      let user = null;
+      await axios
+        .get(`http://localhost:6011/user/${id}`)
+        .then(function answer(res) {
+          user = res.data;
+        })
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        .catch(function failed(error) {
+          // console.log(error);
         });
+      if (user === NOT_FOUND) {
+        await axios
+          .post('http://localhost:6011/user', response.body)
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          .then(function answer(res) {
+            // console.log(res);
+          })
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          .catch(function failed(error) {
+            // console.log(error);
+          });
       }
       response.body.access_token = accessToken;
       response.body.refresh_token = refreshToken;

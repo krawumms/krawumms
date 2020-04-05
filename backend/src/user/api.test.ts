@@ -24,7 +24,6 @@ describe('Test User api', () => {
       email: 'Test',
       display_name: 'TESTDISPLAY',
     });
-
     expect(response.status).toEqual(CREATED);
     expect(response.body).toHaveProperty('id');
     expect(response.body).toHaveProperty('email');
@@ -45,5 +44,4 @@ describe('Test User api', () => {
     const response = await request(server.server).delete('/user/1');
     expect(response.status).toEqual(OK);
   });
-
 });
