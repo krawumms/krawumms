@@ -53,7 +53,6 @@ export default fastifyPlugin(async (server, opts, next) => {
       if (!user) {
         reply.send(HttpStatus.NOT_FOUND);
       }
-
       reply.code(HttpStatus.OK).send(user);
     } catch (error) {
       request.log.error(error);

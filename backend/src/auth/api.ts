@@ -5,7 +5,6 @@ import SpotifyWebApi from 'spotify-web-api-node';
 import { User } from '../user/model';
 import config from '../config';
 
-
 const spotifyApi = new SpotifyWebApi({
   clientId: config.spotify.clientId,
   clientSecret: config.spotify.clientSecret,
@@ -65,11 +64,15 @@ export default fastifyPlugin(async (server, opts, next) => {
       const accessToken = spotifyApi.getAccessToken();
       const refreshToken = spotifyApi.getRefreshToken();
       const response = await spotifyApi.getMe();
-      const { body } = response
-      await User.create({
-        id: uuid(),
-        ...body,
-      });
+      const { body } = response;
+      const { id } = response.body;
+      const user = await User.findOne({ id });
+      if (!user) {
+        await User.create({
+          id: uuid(),
+          ...body,
+        });
+      }
       response.body.access_token = accessToken;
       response.body.refresh_token = refreshToken;
       reply.status(HttpStatus.OK).send(response.body);
