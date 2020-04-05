@@ -1,5 +1,5 @@
 import fastifyPlugin from 'fastify-plugin';
-import HttpStatus, { NOT_FOUND } from 'http-status-codes';
+import HttpStatus from 'http-status-codes';
 import { v4 as uuid } from 'uuid';
 import SpotifyWebApi from 'spotify-web-api-node';
 import config from '../config';
@@ -64,33 +64,15 @@ export default fastifyPlugin(async (server, opts, next) => {
     try {
       const accessToken = spotifyApi.getAccessToken();
       const refreshToken = spotifyApi.getRefreshToken();
-      const response = await spotifyApi.getMe();
-      const { id } = response.body;
-      let user = null;
-      await axios
-        .get(`http://localhost:6011/user/${id}`)
-        .then(function answer(res) {
-          user = res.data;
-        })
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        .catch(function failed(error) {
-          // console.log(error);
-        });
-      if (user === NOT_FOUND) {
-        await axios
-          .post('http://localhost:6011/user', response.body)
-          // eslint-disable-next-line @typescript-eslint/no-unused-vars
-          .then(function answer(res) {
-            // console.log(res);
-          })
-          // eslint-disable-next-line @typescript-eslint/no-unused-vars
-          .catch(function failed(error) {
-            // console.log(error);
-          });
+      const spotifyResponse = await spotifyApi.getMe();
+      const { id } = spotifyResponse.body;
+      const userApiResponse = await axios.get(`http://localhost:6011/user/${id}`);
+      if (userApiResponse.data === HttpStatus.NOT_FOUND) {
+        await axios.post('http://localhost:6011/user', spotifyResponse.body);
       }
-      response.body.access_token = accessToken;
-      response.body.refresh_token = refreshToken;
-      reply.status(HttpStatus.OK).send(response.body);
+      spotifyResponse.body.access_token = accessToken;
+      spotifyResponse.body.refresh_token = refreshToken;
+      reply.status(HttpStatus.OK).send(spotifyResponse.body);
     } catch (error) {
       request.log.error(error);
       reply.send(HttpStatus.INTERNAL_SERVER_ERROR);
