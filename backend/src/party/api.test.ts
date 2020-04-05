@@ -1,6 +1,6 @@
 import request from 'supertest';
 import mongoose from 'mongoose';
-import { CREATED } from 'http-status-codes';
+import { CREATED, OK } from 'http-status-codes';
 
 import server from '../server';
 
@@ -25,5 +25,12 @@ describe('Test party api', () => {
 
     expect(response.status).toEqual(CREATED);
     expect(response.body).toHaveProperty('name');
+  });
+
+  it('Should return all Parties', async () => {
+    const response = await request(server.server).get('/parties').send();
+
+    expect(response.status).toEqual(OK);
+    expect(response.body.length).toBeGreaterThan(0);
   });
 });
