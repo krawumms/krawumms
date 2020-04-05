@@ -33,4 +33,18 @@ describe('Test party api', () => {
     expect(response.status).toEqual(OK);
     expect(response.body.length).toBeGreaterThan(0);
   });
+
+  it('Should return 404 for invalid ID in GET', async () => {
+    const response = await request(server.server).get('/parties/1111').send();
+
+    expect(response.status).toEqual(OK);
+    expect(response.body).toEqual(404);
+  });
+
+  it('Should return 404 for invalid ID in DELETE', async () => {
+    const response = await request(server.server).delete('/parties/1111').send();
+
+    expect(response.status).toEqual(OK);
+    expect(response.body).toEqual(404);
+  });
 });
