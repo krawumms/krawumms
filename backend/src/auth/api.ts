@@ -2,8 +2,9 @@ import fastifyPlugin from 'fastify-plugin';
 import HttpStatus from 'http-status-codes';
 import { v4 as uuid } from 'uuid';
 import SpotifyWebApi from 'spotify-web-api-node';
-
 import config from '../config';
+
+const axios = require('axios').default;
 
 const spotifyApi = new SpotifyWebApi({
   clientId: config.spotify.clientId,
@@ -63,17 +64,19 @@ export default fastifyPlugin(async (server, opts, next) => {
     try {
       const accessToken = spotifyApi.getAccessToken();
       const refreshToken = spotifyApi.getRefreshToken();
-
-      const response = await spotifyApi.getMe();
-      response.body.access_token = accessToken;
-      response.body.refresh_token = refreshToken;
-
-      reply.status(HttpStatus.OK).send(response.body);
+      const spotifyResponse = await spotifyApi.getMe();
+      const { id } = spotifyResponse.body;
+      const userApiResponse = await axios.get(`http://localhost:6011/user/${id}`);
+      if (userApiResponse.data === HttpStatus.NOT_FOUND) {
+        await axios.post('http://localhost:6011/user', spotifyResponse.body);
+      }
+      spotifyResponse.body.access_token = accessToken;
+      spotifyResponse.body.refresh_token = refreshToken;
+      reply.status(HttpStatus.OK).send(spotifyResponse.body);
     } catch (error) {
       request.log.error(error);
       reply.send(HttpStatus.INTERNAL_SERVER_ERROR);
     }
   });
-
   next();
 });
