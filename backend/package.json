@@ -16,6 +16,7 @@
     "fastify-plugin": "^1.6.1",
     "fastify-swagger": "^2.5.0",
     "http-status-codes": "^1.4.0",
+    "isomorphic-unfetch": "^3.0.0",
     "mongoose": "^5.9.5",
     "mongoose-hidden": "^1.8.1",
     "pino-pretty": "^3.6.1",
