@@ -9,3 +9,10 @@ export type Todo = {
   text: string;
   done: boolean;
 };
+
+export type Track = {
+  id: string;
+  name: string;
+  artists: string[];
+  imgUrl: string;
+};
