@@ -29,6 +29,10 @@ const Layout: React.FunctionComponent<Props> = ({ children, title = 'This is the
         |{' '}
         <Link href="/login">
           <a>Login</a>
+        </Link>{' '}
+        |{' '}
+        <Link href="/search">
+          <a>Search</a>
         </Link>
       </nav>
     </header>
