@@ -13,4 +13,7 @@ export type Todo = {
 export type Party = {
   id: number;
   name: string;
+  topic: string;
+  createdAt: Date;
+  updatedAt: Date;
 };

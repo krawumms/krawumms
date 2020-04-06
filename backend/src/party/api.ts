@@ -12,6 +12,7 @@ export const AddPartySchema = {
     type: 'object',
     properties: {
       name: { type: 'string' },
+      topic: { type: 'string' },
     },
   },
   response: {
@@ -21,6 +22,7 @@ export const AddPartySchema = {
       properties: {
         id: { type: 'string' },
         name: { type: 'string' },
+        topic: { type: 'string' },
       },
     },
   },
