@@ -13,14 +13,13 @@
     "cypress:open": "cypress open"
   },
   "dependencies": {
+    "axios": "^0.19.2",
     "cypress": "^4.3.0",
-    "eslint-plugin-cypress": "^2.10.3",
     "isomorphic-unfetch": "3.0.0",
     "next": "latest",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
-    "swr": "^0.2.0",
-    "axios": "^0.19.2"
+    "swr": "^0.2.0"
   },
   "devDependencies": {
     "@types/jest": "^25.2.1",
@@ -30,6 +29,7 @@
     "cross-env": "^7.0.2",
     "eslint": "^6.8.0",
     "eslint-config-airbnb-typescript-prettier": "^2.1.1",
+    "eslint-plugin-cypress": "^2.10.3",
     "eslint-plugin-jest": "^23.8.2",
     "eslint-plugin-prettier": "^3.1.2",
     "jest": "^25.2.7",
