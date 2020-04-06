@@ -22,7 +22,7 @@
     "pino-pretty": "^3.6.1",
     "source-map-support": "^0.5.16",
     "spotify-web-api-node": "^4.0.0",
-    "uuid": "^7.0.2"
+    "uuid": "^7.0.3"
   },
   "scripts": {
     "build": "rm -rf dist && tsc --sourceMap -p ./",
