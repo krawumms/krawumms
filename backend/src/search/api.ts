@@ -1,10 +1,7 @@
 import fastifyPlugin from 'fastify-plugin';
 import HttpStatus from 'http-status-codes';
 import fetch from 'node-fetch';
-
-// temporary till token handling has been implemented properly
-const accessToken =
-  'BQB7uUtMAdlaCt9fhIH5XkJL5fSzwXw0bDeF5Fpufv0sCNNRz1a_9PO9NEJV8dFF9I5ElJgNXd-uY168HXYOfTjE9PWMIcsK2jwEcy_GevnvgcXgKCsVwI0eWmqjSu2YvFR_B-JM755ihdCr2bhINilO-eTydUUhwYeRb2cK';
+import spotifyApi from '../utils/spotify';
 
 const SPOTIFY_API_BASE_URL = 'https://api.spotify.com';
 
@@ -13,18 +10,13 @@ export default fastifyPlugin(async (server, opts, next) => {
     try {
       const { query, limit, offset } = request.query;
 
-      const response = await fetch(
-        `${SPOTIFY_API_BASE_URL}/v1/search?q=${query}&type=track&market=from_token&limit=${limit}&offset=${offset}`,
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        },
-      );
+      const { body: token } = await spotifyApi.clientCredentialsGrant();
 
-      const res = await response.json();
+      spotifyApi.setAccessToken(token.access_token);
 
-      reply.status(HttpStatus.OK).send(res.tracks.items);
+      const { body } = await spotifyApi.searchTracks(query, { limit, offset });
+
+      reply.status(HttpStatus.OK).send(body.tracks.items);
     } catch (error) {
       request.log.error(error);
       reply.send(HttpStatus.INTERNAL_SERVER_ERROR);
