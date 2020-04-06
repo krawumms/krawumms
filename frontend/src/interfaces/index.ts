@@ -13,8 +13,16 @@ export type Todo = {
 export type Track = {
   id: string;
   name: string;
-  artists: string[];
-  imgUrl: string;
+  artists: Array<{
+    name: string,
+  }>;
+  album:{
+    images: Array<{
+      height: number,
+      width: number,
+      url: string,
+    }>
+  }
 };
 
 export type Party = {
