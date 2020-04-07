@@ -19,17 +19,13 @@
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "strict": true,
-    "target": "esnext",
-    "types": [
-      "cypress"
-    ]
+    "target": "esnext"
   },
   "exclude": [
     "node_modules"
   ],
   "include": [
     "**/*.ts",
-    "**/*.tsx",
-    "cypress/**/*.js"
+    "**/*.tsx"
   ]
 }
