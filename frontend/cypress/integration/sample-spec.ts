@@ -7,3 +7,5 @@ describe('The Home Page', () => {
     cy.visit('/');
   });
 });
+
+export {};
