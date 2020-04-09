@@ -40,7 +40,7 @@
     "@shelf/jest-mongodb": "^1.1.5",
     "@types/jest": "^25.2.1",
     "@types/mongodb": "^3.5.5",
-    "@types/mongoose": "^5.7.8",
+    "@types/mongoose": "^5.7.9",
     "@types/uuid": "^7.0.2",
     "cross-env": "^7.0.2",
     "eslint": "^6.8.0",
