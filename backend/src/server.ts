@@ -8,8 +8,7 @@ import fastifyCookie from 'fastify-cookie';
 import { IncomingMessage, Server, ServerResponse } from 'http';
 
 import SwaggerOptions from './swagger';
-import todoApi from './todo/api';
-import authApi from './auth/api';
+import searchApi from './search/api';
 import partyApi from './party/api';
 import userApi from './user/api';
 
@@ -26,8 +25,7 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 server.register(fastifyCookie);
-server.register(todoApi);
-server.register(authApi);
+server.register(searchApi);
 server.register(partyApi);
 
 server.register(userApi);

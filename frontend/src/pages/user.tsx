@@ -25,8 +25,8 @@ const UserPage: NextPage<Props> = ({ display_name, email, pathname }) => (
 );
 
 UserPage.getInitialProps = async ({ pathname }) => {
-  const dataProfile = await fetcher('http://localhost:6011/profile');
-  const dataKrawumms = await fetcher(`http://localhost:6011/user/${dataProfile.id}`);
+  const dataProfile = await fetcher('http://localhost:6001/profile');
+  const dataKrawumms = await fetcher(`http://localhost:6001/user/${dataProfile.id}`);
   const { display_name, email } = dataKrawumms;
 
   return { display_name, email, pathname };

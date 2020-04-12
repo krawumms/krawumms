@@ -4,6 +4,7 @@ import Link from 'next/link';
 
 import Layout from '../components/Layout';
 import fetcher from '../util/fetcher';
+import withAuth from '../with/auth';
 
 type Props = {
   display_name: string;
@@ -19,7 +20,7 @@ const ProfilePage: NextPage<Props> = ({ display_name, email, access_token, refre
     <p>This is your mail address: {email}</p>
     <p>This is your access token: {access_token}</p>
     <p>This is your refresh token: {refresh_token}</p>
-    <a href="http://localhost:6011/refresh_token">Refresh your access token</a>
+    <a href="http://localhost:6001/refresh_token">Refresh your access token</a>
     <h2>User from DB</h2>
     <a href="http://localhost:3000/user">Show User from DB</a>
     <p>You are currently on: {pathname}</p>
@@ -32,10 +33,10 @@ const ProfilePage: NextPage<Props> = ({ display_name, email, access_token, refre
 );
 
 ProfilePage.getInitialProps = async ({ pathname }) => {
-  const data = await fetcher('http://localhost:6011/profile');
+  const data = await fetcher('http://localhost:6001/profile');
   const { display_name, email, access_token, refresh_token } = data;
 
   return { display_name, email, access_token, refresh_token, pathname };
 };
 
-export default ProfilePage;
+export default withAuth(ProfilePage);

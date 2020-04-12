@@ -18,6 +18,6 @@ WORKDIR /server
 
 COPY --from=build /server .
 
-EXPOSE 6011
+EXPOSE 6001
 
 CMD ["yarn", "start"]
