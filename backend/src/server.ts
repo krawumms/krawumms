@@ -10,6 +10,7 @@ import { IncomingMessage, Server, ServerResponse } from 'http';
 import SwaggerOptions from './swagger';
 import searchApi from './search/api';
 import partyApi from './party/api';
+import userApi from './user/api';
 
 const server: fastify.FastifyInstance<Server, IncomingMessage, ServerResponse> = fastify({
   logger: {
@@ -27,4 +28,5 @@ server.register(fastifyCookie);
 server.register(searchApi);
 server.register(partyApi);
 
+server.register(userApi);
 export default server;
