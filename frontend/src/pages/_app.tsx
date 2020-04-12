@@ -35,6 +35,7 @@ export default class App extends NextApp {
       <CacheProvider value={cache}>
         <ThemeProvider>
           <CSSReset />
+          {/* eslint-disable-next-line react/jsx-props-no-spreading */}
           <Component {...pageProps} />
         </ThemeProvider>
       </CacheProvider>

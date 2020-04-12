@@ -27,12 +27,15 @@ server.register(fastifyCookie);
 server.register((fastify: FastifyInstance, _, next) => {
   const app = Next({ dev });
   const handle = app.getRequestHandler();
-  app.prepare()
+  app
+    .prepare()
     .then(() => {
       if (dev) {
         fastify.get('/_next/*', (req, reply) => {
+          // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
           // @ts-ignore
           return app.handleRequest(req.req, reply.res).then(() => {
+            // eslint-disable-next-line no-param-reassign
             reply.sent = true;
           });
         });
@@ -43,17 +46,20 @@ server.register((fastify: FastifyInstance, _, next) => {
         reply.redirect(spotifyApi.createAuthorizeURL(scopes, state));
       });
 
+      // eslint-disable-next-line consistent-return
       fastify.get('/oauth/callback', async (req, reply) => {
         try {
           const code = req.query && req.query.code;
           const state = req.query && req.query.state;
 
           const { body } = await spotifyApi.authorizationCodeGrant(code);
+          // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
           // @ts-ignore
           reply.setCookie(tokenKey, queryString.stringify(body), {
             httpOnly: true,
             path: '/',
           });
+          // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
           // @ts-ignore
           req.req.accessToken = body.access_token;
 
@@ -65,20 +71,22 @@ server.register((fastify: FastifyInstance, _, next) => {
       });
 
       fastify.all('/*', (req, reply) => {
-        //console.log(req)
+        // console.log(req)
         const tokenCookie = req.cookies && req.cookies[tokenKey];
         const parsedTokenCookie = queryString.parse(tokenCookie);
 
-
+        // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
         // @ts-ignore
         req.req.accessToken = parsedTokenCookie.access_token;
         return handle(req.req, reply.res).then(() => {
+          // eslint-disable-next-line no-param-reassign
           reply.sent = true;
         });
       });
 
       fastify.setNotFoundHandler((req, reply) => {
         return app.render404(req.req, reply.res).then(() => {
+          // eslint-disable-next-line no-param-reassign
           reply.sent = true;
         });
       });

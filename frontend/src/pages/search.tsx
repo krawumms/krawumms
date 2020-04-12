@@ -33,7 +33,7 @@ const SearchPage: NextPage<Props> = () => {
       setTracks(newTracks);
       setIsLoading(false);
     },
-    [setQuery, setTracks, setIsLoading],
+    [setQuery, setTracks, setIsLoading, offset],
   );
 
   const handleOffsetChange = useCallback(async () => {
