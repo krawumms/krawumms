@@ -1,33 +1,32 @@
-import * as React from 'react';
+import React from 'react';
 import { useRouter } from 'next/router';
-import { NextPage, NextPageContext } from 'next';
+import { NextPage } from 'next';
 import useSWR from 'swr';
 
+import { Spinner } from '@chakra-ui/core/dist';
 import { Party } from '../../interfaces';
 import fetcher from '../../util/fetcher';
+import config from '../../config';
+import Layout from '../../components/Layout';
+import PartyComponent from '../../components/party/party';
 
-type Props = {
-  initialData?: Party;
-};
+type Props = {};
 
-const PartyPage: NextPage<Props> = ({ initialData }) => {
-  const { query } = useRouter();
-  const { id } = query;
-  const { data, error } = useSWR<Party>(`http://localhost:6011/parties/${id}`, fetcher, { initialData });
+const PartyPage: NextPage<Props> = () => {
+  const {
+    query: { id },
+  } = useRouter();
+
+  const { data, error } = useSWR<Party>(`${config.apiBaseUrl}/parties/${id}`, fetcher);
+
+  const name = (data && data.name) || '';
 
   return (
-    <>
-      {error && <div>failed to load</div>}
-      {!data && <div>loading...</div>}
-      {data && !error && <div>{data?.name}</div>}
-    </>
+    <Layout title={`Party ${name} | Krawumms`}>
+      {!data && !error && <Spinner size="xl" />}
+      {data && <PartyComponent party={data} />}
+    </Layout>
   );
-};
-
-PartyPage.getInitialProps = async ({ query }: NextPageContext) => {
-  const { id } = query;
-  const data = await fetcher(`http://localhost:6011/parties/${id}`);
-  return { initialData: data };
 };
 
 export default PartyPage;

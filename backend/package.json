@@ -19,6 +19,8 @@
     "http-status-codes": "^1.4.0",
     "mongoose": "^5.9.7",
     "mongoose-hidden": "^1.8.1",
+    "mongoose-timestamp": "^0.6.0",
+    "node-fetch": "^2.6.0",
     "pino-pretty": "^3.6.1",
     "source-map-support": "^0.5.16",
     "spotify-web-api-node": "^4.0.0",

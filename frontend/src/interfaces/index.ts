@@ -10,7 +10,25 @@ export type Todo = {
   done: boolean;
 };
 
+export type Track = {
+  id: string;
+  name: string;
+  artists: Array<{
+    name: string;
+  }>;
+  album: {
+    images: Array<{
+      height: number;
+      width: number;
+      url: string;
+    }>;
+  };
+};
+
 export type Party = {
   id: number;
   name: string;
+  topic: string;
+  createdAt: Date;
+  updatedAt: Date;
 };
