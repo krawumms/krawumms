@@ -1,9 +1,6 @@
 import fastifyPlugin from 'fastify-plugin';
 import HttpStatus from 'http-status-codes';
-import fetch from 'node-fetch';
 import spotifyApi from '../utils/spotify';
-
-const SPOTIFY_API_BASE_URL = 'https://api.spotify.com';
 
 export default fastifyPlugin(async (server, opts, next) => {
   server.get('/search', async (request, reply) => {

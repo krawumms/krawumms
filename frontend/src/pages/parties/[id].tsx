@@ -3,18 +3,19 @@ import { useRouter } from 'next/router';
 import { NextPage } from 'next';
 import useSWR from 'swr';
 
+import { Spinner } from '@chakra-ui/core/dist';
 import { Party } from '../../interfaces';
 import fetcher from '../../util/fetcher';
-import { Spinner } from '@chakra-ui/core/dist';
 import config from '../../config';
 import Layout from '../../components/Layout';
 import PartyComponent from '../../components/party/party';
 
-type Props = {
-};
+type Props = {};
 
 const PartyPage: NextPage<Props> = () => {
-  const { query: { id }  } = useRouter();
+  const {
+    query: { id },
+  } = useRouter();
 
   const { data, error } = useSWR<Party>(`${config.apiBaseUrl}/parties/${id}`, fetcher);
 
@@ -22,14 +23,8 @@ const PartyPage: NextPage<Props> = () => {
 
   return (
     <Layout title={`Party ${name} | Krawumms`}>
-      {!data && !error && (
-        <Spinner size="xl" />
-      )}
-      {data && (
-        <PartyComponent
-          party={data}
-        />
-      )}
+      {!data && !error && <Spinner size="xl" />}
+      {data && <PartyComponent party={data} />}
     </Layout>
   );
 };

@@ -3,12 +3,12 @@ import { FormErrorMessage } from '@chakra-ui/core';
 import { useField } from 'react-final-form';
 
 type Props = {
-  name: string,
-}
+  name: string;
+};
 
-const Error:FunctionComponent<Props> = ({ name }) => {
+const Error: FunctionComponent<Props> = ({ name }) => {
   const {
-    meta: { error }
+    meta: { error },
   } = useField(name, { subscription: { error: true } });
   return <FormErrorMessage>{error}</FormErrorMessage>;
 };

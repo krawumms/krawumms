@@ -2,9 +2,9 @@ import React, { useCallback, useState } from 'react';
 import { NextPage } from 'next';
 import queryString from 'querystring';
 
+import { Box, Button, Heading, Icon, Image, Input, Spinner, Stack, Text } from '@chakra-ui/core';
 import Layout from '../components/Layout';
 import fetcher from '../util/fetcher';
-import { Box, Button, Heading, Icon, Image, Input, Spinner, Stack, Text } from '@chakra-ui/core';
 import { Track } from '../interfaces';
 import config from '../config';
 
@@ -18,20 +18,23 @@ const SearchPage: NextPage<Props> = () => {
   const [tracks, setTracks] = useState<Track[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const handleQueryChange = useCallback(async (event) => {
-    const newQuery = event.target.value;
-    setIsLoading(true);
-    setQuery(newQuery);
-    const params = queryString.stringify({
-      offset,
-      query: newQuery,
-      limit,
-    });
+  const handleQueryChange = useCallback(
+    async (event) => {
+      const newQuery = event.target.value;
+      setIsLoading(true);
+      setQuery(newQuery);
+      const params = queryString.stringify({
+        offset,
+        query: newQuery,
+        limit,
+      });
 
-    const newTracks = await fetcher(`${config.apiBaseUrl}/search?${params}`);
-    setTracks(newTracks);
-    setIsLoading(false);
-  }, [setQuery, setTracks, setIsLoading]);
+      const newTracks = await fetcher(`${config.apiBaseUrl}/search?${params}`);
+      setTracks(newTracks);
+      setIsLoading(false);
+    },
+    [setQuery, setTracks, setIsLoading],
+  );
 
   const handleOffsetChange = useCallback(async () => {
     const newOffset = offset + limit;
@@ -47,37 +50,14 @@ const SearchPage: NextPage<Props> = () => {
 
   return (
     <Layout title="Search | Krawumms">
-      <Box
-        padding="16px"
-        display="flex"
-        flexDirection="column"
-        alignItems="center"
-        justifyContent="center"
-      >
-        <Heading as="h1">
-          Search tracks on Spotify
-        </Heading>
-        <Box
-          padding="32px"
-          width={[
-            '100%',
-            '75%',
-            '50%',
-          ]}
-        >
-          <Input
-            variant="filled"
-            onChange={handleQueryChange}
-            placeholder="Search"
-          />
+      <Box padding="16px" display="flex" flexDirection="column" alignItems="center" justifyContent="center">
+        <Heading as="h1">Search tracks on Spotify</Heading>
+        <Box padding="32px" width={['100%', '75%', '50%']}>
+          <Input variant="filled" onChange={handleQueryChange} placeholder="Search" />
         </Box>
         {!isLoading && Array.isArray(tracks) && Boolean(tracks.length) && (
           <Stack
-            width={[
-              '100%',
-              '75%',
-              '50%',
-            ]}
+            width={['100%', '75%', '50%']}
             backgroundColor="#EDF2F7"
             maxHeight="500px"
             overflowY="auto"
@@ -102,22 +82,17 @@ const SearchPage: NextPage<Props> = () => {
                     marginRight="16px"
                   />
                   <Box>
-                    <Heading
-                      as="h2"
-                      size="md"
-                    >
+                    <Heading as="h2" size="md">
                       {name}
                     </Heading>
-                    <Text>
-                      {artists.map((artist) => artist.name).join(', ')}
-                    </Text>
+                    <Text>{artists.map((artist) => artist.name).join(', ')}</Text>
                   </Box>
                 </Box>
               );
             })}
           </Stack>
         )}
-        {!isLoading && query && !Boolean(tracks?.length) && (
+        {!isLoading && query && !tracks?.length && (
           <Box
             padding="16px"
             display="flex"
@@ -126,35 +101,17 @@ const SearchPage: NextPage<Props> = () => {
             justifyContent="center"
             alignItems="center"
           >
-            <Icon
-              name="info-outline"
-              size="32px"
-              margin="16px"
-            />
-            <Text
-              textAlign="center"
-            >
-              No Results found
-            </Text>
+            <Icon name="info-outline" size="32px" margin="16px" />
+            <Text textAlign="center">No Results found</Text>
           </Box>
         )}
         {isLoading && (
-          <Box
-            flex="1"
-            padding="32px"
-          >
-            <Spinner
-              height="128px"
-              width="128px"
-            />
+          <Box flex="1" padding="32px">
+            <Spinner height="128px" width="128px" />
           </Box>
         )}
         {!isLoading && query && Boolean(tracks?.length) && (
-          <Button
-            margin="16px auto"
-            onClick={handleOffsetChange}
-            leftIcon="search"
-          >
+          <Button margin="16px auto" onClick={handleOffsetChange} leftIcon="search">
             Search more
           </Button>
         )}

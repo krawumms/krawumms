@@ -14,15 +14,10 @@ const PartyCreate: React.FunctionComponent = ({ ...props }) => {
       const party = await fetcher(`${config.apiBaseUrl}/parties`, { method: 'POST', body: JSON.stringify(values) });
       return [party, ...parties];
     });
-  }, [mutate]);
+  }, []);
   return (
     <Form onSubmit={handleFormSubmit}>
-      {({
-          handleSubmit,
-          form,
-          submitting,
-          pristine,
-        }) => (
+      {({ handleSubmit, form, submitting, pristine }) => (
         <Box
           as="form"
           alignSelf="flex-start"
@@ -32,35 +27,16 @@ const PartyCreate: React.FunctionComponent = ({ ...props }) => {
           flex="1"
           backgroundColor="#ffffff"
           onSubmit={handleSubmit}
+          /* eslint-disable-next-line react/jsx-props-no-spreading */
           {...props}
         >
-          <InputControl
-            name="name"
-            label="Name"
-            required
-          />
-          <InputControl
-            name="topic"
-            label="Topic"
-            required
-          />
-          <ButtonGroup
-            spacing={4}
-          >
-            <Button
-              isLoading={submitting}
-              loadingText="Submitting"
-              variantColor="green"
-              type="submit"
-            >
+          <InputControl name="name" label="Name" required />
+          <InputControl name="topic" label="Topic" required />
+          <ButtonGroup spacing={4}>
+            <Button isLoading={submitting} loadingText="Submitting" variantColor="green" type="submit">
               Create Party
             </Button>
-            <Button
-              variantColor="teal"
-              variant="outline"
-              onClick={form.reset}
-              isDisabled={submitting || pristine}
-            >
+            <Button variantColor="teal" variant="outline" onClick={form.reset} isDisabled={submitting || pristine}>
               Reset
             </Button>
           </ButtonGroup>

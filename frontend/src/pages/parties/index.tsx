@@ -9,22 +9,15 @@ import config from '../../config';
 import Parties from '../../components/party/parties';
 import withAuth from '../../with/auth';
 
-type Props = {
-};
+type Props = {};
 
 const PartiesPage: NextPage<Props> = () => {
   const { data, error } = useSWR(`${config.apiBaseUrl}/parties`, fetcher);
 
   return (
     <Layout title="Party List | Krawumms">
-      {!data && !error && (
-        <Spinner size="xl" />
-      )}
-      {data && (
-        <Parties
-          parties={data}
-        />
-      )}
+      {!data && !error && <Spinner size="xl" />}
+      {data && <Parties parties={data} />}
     </Layout>
   );
 };

@@ -14,15 +14,15 @@ export type Track = {
   id: string;
   name: string;
   artists: Array<{
-    name: string,
+    name: string;
   }>;
-  album:{
+  album: {
     images: Array<{
-      height: number,
-      width: number,
-      url: string,
-    }>
-  }
+      height: number;
+      width: number;
+      url: string;
+    }>;
+  };
 };
 
 export type Party = {

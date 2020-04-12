@@ -10,20 +10,10 @@ const Landing: FunctionComponent = () => {
 
   return (
     <div className="landing">
-      <Flex
-        align="center"
-        justify="center"
-        flex="1"
-      >
+      <Flex align="center" justify="center" flex="1">
         <Box
           bg="gray.50"
-          width={[
-            '100%',
-            '65%',
-            '50%',
-            '40%',
-            '30%',
-          ]}
+          width={['100%', '65%', '50%', '40%', '30%']}
           position="relative"
           borderRadius="2px"
           boxShadow="md"
@@ -46,18 +36,9 @@ const Landing: FunctionComponent = () => {
             Krawumms lets your guests choose which music should be played using their smartphones.
           </Text>
           <Stack>
-            <Input
-              variant="filled"
-              placeholder="Party Code"
-            />
-            <Button
-              variantColor="green"
-            >
-              Join Party
-            </Button>
-            <Button onClick={onCreateClick}>
-              Create Party
-            </Button>
+            <Input variant="filled" placeholder="Party Code" />
+            <Button variantColor="green">Join Party</Button>
+            <Button onClick={onCreateClick}>Create Party</Button>
           </Stack>
         </Box>
       </Flex>
@@ -65,14 +46,14 @@ const Landing: FunctionComponent = () => {
       <style jsx>
         {`
           .landing {
-            background: linear-gradient(#1c1f24e6,#1c1f24e6), url(/background.jpg) no-repeat center;
-          
+            background: linear-gradient(#1c1f24e6, #1c1f24e6), url(/background.jpg) no-repeat center;
+
             min-height: 100vh;
             height: 100%;
             width: 100vw;
-            
+
             display: flex;
-          
+
             background-position: center;
             background-repeat: no-repeat;
             background-size: cover;

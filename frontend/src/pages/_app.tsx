@@ -8,7 +8,7 @@ import { AppInitialProps } from 'next/dist/next-server/lib/utils';
 import { AppContext } from 'next/dist/pages/_app';
 
 export default class App extends NextApp {
-  static async getInitialProps({ Component, ctx, }: AppContext): Promise<AppInitialProps> {
+  static async getInitialProps({ Component, ctx }: AppContext): Promise<AppInitialProps> {
     let pageProps = {};
 
     if (Component.getInitialProps) {
@@ -16,15 +16,19 @@ export default class App extends NextApp {
     }
 
     const { req } = ctx;
+    // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
     // @ts-ignore
+    // eslint-disable-next-line no-underscore-dangle
     const { accessToken } = req || window.__NEXT_DATA__.props;
 
     return {
       pageProps,
+      // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
       // @ts-ignore
       accessToken,
     };
-  };
+  }
+
   render() {
     const { Component, pageProps } = this.props;
     return (
