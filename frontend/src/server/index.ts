@@ -20,7 +20,7 @@ const server = Fastify({ logger: { level: 'error' } });
 const port = parseInt(process.env.PORT || '3000', 10);
 const dev = process.env.NODE_ENV !== 'production';
 
-//const scopes = ['user-read-private', 'user-read-email'];
+// const scopes = ['user-read-private', 'user-read-email'];
 const tokenKey = 'oauth_token';
 
 server.register(fastifyCookie);
