@@ -2,13 +2,12 @@ import React, { Component } from 'react';
 import queryString from 'querystring';
 import * as http from 'http';
 import { NextPage } from 'next';
-
-const basePath = 'http://localhost:3000/oauth/login';
+import config from '../config';
 
 export async function triggerAuthCodeGrant(res: http.ServerResponse | undefined, asPath: string) {
   // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
   // @ts-ignore
-  const url = `${basePath}?${queryString.stringify({ state: asPath })}`;
+  const url = `${config.uiBaseUrl}/oauth/login?${queryString.stringify({ state: asPath })}`;
 
   if (res) {
     // server-side redirect
