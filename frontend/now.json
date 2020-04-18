@@ -1,6 +1,19 @@
 {
   "version": 2,
-  "github": {
-    "enabled": false
-  }
+  "builds": [
+    {
+      "src": "next.config.js",
+      "use": "@now/next"
+    },
+    {
+      "src": "src/serverless.ts",
+      "use": "@now/node@canary"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/.*",
+      "dest": "/src/server/serverless.ts"
+    }
+  ]
 }
