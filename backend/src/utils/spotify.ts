@@ -7,4 +7,12 @@ const spotifyApi = new SpotifyWebApi({
   redirectUri: config.spotify.redirectUri,
 });
 
-export default spotifyApi;
+const createSpotifyApi = async () => {
+  const { body: token } = await spotifyApi.clientCredentialsGrant();
+
+  spotifyApi.setAccessToken(token.access_token);
+
+  return spotifyApi;
+};
+
+export default createSpotifyApi;
