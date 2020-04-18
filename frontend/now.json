@@ -3,6 +3,13 @@
   "github": {
     "enabled": false
   },
+  "env": {
+    "SPOTIFY_REDIRECT_URI": "@SPOTIFY_REDIRECT_URI",
+    "SPOTIFY_CLIENT_SECRET": "@SPOTIFY_CLIENT_SECRET",
+    "SPOTIFY_CLIENT_ID": "@SPOTIFY_CLIENT_ID",
+    "API_BASE_URL": "@API_BASE_URL",
+    "UI_BASE_URL": "@UI_BASE_URL"
+  },
   "build": {
     "env": {
       "SPOTIFY_REDIRECT_URI": "@SPOTIFY_REDIRECT_URI",
