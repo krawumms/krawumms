@@ -2,7 +2,6 @@ import fastifyPlugin from 'fastify-plugin';
 import HttpStatus from 'http-status-codes';
 import createSpotifyApi from '../utils/spotify';
 
-
 export default fastifyPlugin(async (server, opts, next) => {
   server.get('/search', async (request, reply) => {
     try {
@@ -21,4 +20,3 @@ export default fastifyPlugin(async (server, opts, next) => {
 
   next();
 });
-

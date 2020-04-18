@@ -15,6 +15,7 @@ const createSpotifyApi = async () => {
   return spotifyApi;
 };
 
+// eslint-disable-next-line
 const createUserSpotifyApi = async (accessToken: string) => {
   console.log(accessToken);
 
