@@ -14,7 +14,7 @@ type Props = {
 
 const UserPage: NextPage<Props> = ({ display_name, email, pathname }) => (
   <Layout title="User Display from MongoDB | Krawumms">
-    <h1>Hello {display_name}!</h1>
+    <h1>Hello, {display_name}!</h1>
     <p>This is your mail address: {email}</p>
     <p>You are currently on: {pathname}</p>
     <p>
