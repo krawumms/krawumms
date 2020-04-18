@@ -20,7 +20,7 @@ const server = Fastify({ logger: { level: 'error' } });
 const port = parseInt(process.env.PORT || '3000', 10);
 const dev = process.env.NODE_ENV !== 'production';
 
-const scopes = ['user-read-private', 'user-read-email'];
+//const scopes = ['user-read-private', 'user-read-email'];
 const tokenKey = 'oauth_token';
 
 server.register(fastifyCookie);
@@ -42,8 +42,10 @@ server.register((fastify: FastifyInstance, _, next) => {
       }
 
       server.get('/oauth/login', async (req, reply) => {
-        const state = (req.query && req.query.state) || '/';
-        reply.redirect(spotifyApi.createAuthorizeURL(scopes, state));
+        // const state = (req.query && req.query.state) || '/';
+        console.log(req, process.env);
+        reply.code(200).send(process.env);
+        // reply.redirect(spotifyApi.createAuthorizeURL(scopes, state));
       });
 
       // eslint-disable-next-line consistent-return
@@ -62,7 +64,8 @@ server.register((fastify: FastifyInstance, _, next) => {
           // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
           // @ts-ignore
           req.req.accessToken = body.access_token;
-          return process.env;
+
+          return reply.redirect(state);
         } catch (error) {
           req.log.error(error);
           reply.send(HttpStatus.INTERNAL_SERVER_ERROR);
