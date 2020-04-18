@@ -27,6 +27,6 @@ if (process.env.NODE_ENV !== 'production') {
 server.register(fastifyCookie);
 server.register(searchApi);
 server.register(partyApi);
-
 server.register(userApi);
+
 export default server;

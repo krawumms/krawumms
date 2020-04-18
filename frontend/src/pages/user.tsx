@@ -4,6 +4,7 @@ import Link from 'next/link';
 
 import Layout from '../components/Layout';
 import fetcher from '../util/fetcher';
+import config from "../config";
 
 type Props = {
   display_name: string;
@@ -25,8 +26,8 @@ const UserPage: NextPage<Props> = ({ display_name, email, pathname }) => (
 );
 
 UserPage.getInitialProps = async ({ pathname }) => {
-  const dataProfile = await fetcher('http://localhost:6001/profile');
-  const dataKrawumms = await fetcher(`http://localhost:6001/user/${dataProfile.id}`);
+  const dataProfile = await fetcher(`${config.apiBaseUrl}/profile`);
+  const dataKrawumms = await fetcher(`${config.apiBaseUrl}/user/${dataProfile.id}`);
   const { display_name, email } = dataKrawumms;
 
   return { display_name, email, pathname };

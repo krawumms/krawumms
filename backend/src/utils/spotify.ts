@@ -15,4 +15,12 @@ const createSpotifyApi = async () => {
   return spotifyApi;
 };
 
+const createUserSpotifyApi = async (accessToken: string) => {
+  console.log(accessToken);
+
+  spotifyApi.setAccessToken(accessToken);
+
+  return spotifyApi;
+};
+
 export default createSpotifyApi;

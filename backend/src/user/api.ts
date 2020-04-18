@@ -28,9 +28,23 @@ export const AddUserSchema = {
 };
 
 export default fastifyPlugin(async (server, opts, next) => {
+  server.get('/me', { schema: AddUserSchema }, async (request, reply) => {
+    try {
+      const { body } = request;
+      const user = await User.create({
+        id: uuid(),
+        ...body,
+      });
+      return reply.code(HttpStatus.CREATED).send(user);
+    } catch (error) {
+      request.log.error(error);
+      return reply.send(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  });
+
   server.post('/user', { schema: AddUserSchema }, async (request, reply) => {
     try {
-      const { body } = await request;
+      const { body } = request;
       const user = await User.create({
         id: uuid(),
         ...body,
