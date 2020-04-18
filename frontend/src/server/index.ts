@@ -62,8 +62,7 @@ server.register((fastify: FastifyInstance, _, next) => {
           // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
           // @ts-ignore
           req.req.accessToken = body.access_token;
-
-          return reply.redirect(state);
+          return process.env;
         } catch (error) {
           req.log.error(error);
           reply.send(HttpStatus.INTERNAL_SERVER_ERROR);
