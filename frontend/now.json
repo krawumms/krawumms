@@ -6,7 +6,7 @@
       "use": "@now/next"
     },
     {
-      "src": "src/serverless.ts",
+      "src": "src/server/serverless.ts",
       "use": "@now/node@canary"
     }
   ],
