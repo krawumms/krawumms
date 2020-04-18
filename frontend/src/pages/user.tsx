@@ -4,7 +4,7 @@ import Link from 'next/link';
 
 import Layout from '../components/Layout';
 import fetcher from '../util/fetcher';
-import config from "../config";
+import config from '../config';
 
 type Props = {
   display_name: string;
