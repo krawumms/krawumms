@@ -23,14 +23,6 @@ export default class MyDocument extends Document<Props> {
       <html>
         <Head>
           <style data-emotion-css={ids.join(' ')} dangerouslySetInnerHTML={{ __html: css }} />
-          <script
-            dangerouslySetInnerHTML={{
-              __html: `
-                window.process = {};
-                window.process.env = ${JSON.stringify(process.env)};
-              `,
-            }}
-          />
         </Head>
         <body>
           <Main />
