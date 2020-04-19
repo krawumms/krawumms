@@ -1,6 +1,7 @@
 import fastifyPlugin from 'fastify-plugin';
 import HttpStatus from 'http-status-codes';
 import { v4 as uuid } from 'uuid';
+import shortid from 'shortid';
 
 import { Party } from './model';
 
@@ -23,6 +24,7 @@ export const AddPartySchema = {
         id: { type: 'string' },
         name: { type: 'string' },
         topic: { type: 'string' },
+        sharingCode: { type: 'string' },
       },
     },
   },
@@ -34,6 +36,7 @@ export default fastifyPlugin(async (server, opts, next) => {
       const { body } = request;
       const party = await Party.create({
         id: uuid(),
+        sharingCode: shortid.generate(),
         ...body,
       });
 

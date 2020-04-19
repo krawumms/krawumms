@@ -7,6 +7,7 @@ export interface PartyDocument extends Document {
   name: string;
   topic: string;
   owner: string;
+  sharingCode: string;
 }
 
 export type PartyModel = PartyDocument;
@@ -17,6 +18,7 @@ export const PartySchema: Schema = new Schema(
     name: String,
     topic: String,
     owner: String,
+    sharingCode: String,
   },
   { collection: 'party' },
 );
