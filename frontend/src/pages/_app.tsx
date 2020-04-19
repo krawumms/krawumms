@@ -6,8 +6,15 @@ import { cache } from 'emotion';
 import { CSSReset, ThemeProvider } from '@chakra-ui/core';
 import { AppInitialProps } from 'next/dist/next-server/lib/utils';
 import { AppContext } from 'next/dist/pages/_app';
+import queryString from 'querystring';
+import cookie from 'cookie';
+import { Provider } from '../components/auth/context';
 
-export default class App extends NextApp {
+type Props = {
+  accessToken: any;
+};
+
+export default class App extends NextApp<Props> {
   static async getInitialProps({ Component, ctx }: AppContext): Promise<AppInitialProps> {
     let pageProps = {};
 
@@ -16,10 +23,22 @@ export default class App extends NextApp {
     }
 
     const { req } = ctx;
+    const cookies = cookie.parse(req?.headers.cookie || '');
+    const token = queryString.parse(cookies.krawummsToken as string);
     // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
     // @ts-ignore
     // eslint-disable-next-line no-underscore-dangle
-    const { accessToken } = req || window.__NEXT_DATA__.props;
+    let accessToken = token;
+
+    if (!req) {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+      // @ts-ignore
+      accessToken = window?.__NEXT_DATA__?.props?.accessToken;
+    } else {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+      // @ts-ignore
+      req.accessToken = accessToken;
+    }
 
     return {
       pageProps,
@@ -30,13 +49,15 @@ export default class App extends NextApp {
   }
 
   render() {
-    const { Component, pageProps } = this.props;
+    const { Component, pageProps, accessToken } = this.props;
     return (
       <CacheProvider value={cache}>
         <ThemeProvider>
           <CSSReset />
-          {/* eslint-disable-next-line react/jsx-props-no-spreading */}
-          <Component {...pageProps} />
+          <Provider value={{ accessToken }}>
+            {/* eslint-disable-next-line react/jsx-props-no-spreading */}
+            <Component {...pageProps} />
+          </Provider>
         </ThemeProvider>
       </CacheProvider>
     );
