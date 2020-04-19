@@ -34,6 +34,7 @@ export default fastifyPlugin(async (server, opts, next) => {
       const { body } = request;
       const party = await Party.create({
         id: uuid(),
+        playlist: [],
         ...body,
       });
 
@@ -84,6 +85,35 @@ export default fastifyPlugin(async (server, opts, next) => {
       } else {
         reply.send(HttpStatus.NOT_FOUND);
       }
+    } catch (error) {
+      request.log.error(error);
+      reply.send(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  });
+
+  server.put('/parties/:id/playlist', async (request, reply) => {
+    try {
+      const { body } = request;
+      const {
+        params: { id },
+      } = request;
+      const party = await Party.findOne({ id });
+
+      if (!party) {
+        reply.send(HttpStatus.NOT_FOUND);
+      }
+
+      const editedParty = await Party.findOneAndUpdate(
+        { id },
+        {
+          ...body,
+        },
+        {
+          new: true,
+        },
+      );
+
+      reply.code(HttpStatus.OK).send(editedParty);
     } catch (error) {
       request.log.error(error);
       reply.send(HttpStatus.INTERNAL_SERVER_ERROR);

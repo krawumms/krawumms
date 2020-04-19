@@ -17,6 +17,7 @@ export const PartySchema: Schema = new Schema(
     name: String,
     topic: String,
     owner: String,
+    playlist: Array,
   },
   { collection: 'party' },
 );
