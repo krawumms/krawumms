@@ -8,7 +8,8 @@ import { AppInitialProps } from 'next/dist/next-server/lib/utils';
 import { AppContext } from 'next/dist/pages/_app';
 import queryString from 'querystring';
 import cookie from 'cookie';
-import { Provider } from '../components/auth/context';
+
+import { AuthProvider } from '../contexts/AuthContext';
 
 type Props = {
   accessToken: any;
@@ -54,10 +55,10 @@ export default class App extends NextApp<Props> {
       <CacheProvider value={cache}>
         <ThemeProvider>
           <CSSReset />
-          <Provider value={{ accessToken }}>
+          <AuthProvider value={{ accessToken }}>
             {/* eslint-disable-next-line react/jsx-props-no-spreading */}
             <Component {...pageProps} />
-          </Provider>
+          </AuthProvider>
         </ThemeProvider>
       </CacheProvider>
     );
