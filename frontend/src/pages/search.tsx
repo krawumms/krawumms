@@ -1,7 +1,6 @@
-import React, { useCallback, useContext, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { NextPage } from 'next';
 import queryString from 'querystring';
-
 import { Box, Button, Heading, Icon, Image, Input, Spinner, Stack, Text, IconButton } from '@chakra-ui/core';
 import Layout from '../components/Layout';
 import fetcher from '../util/fetcher';
@@ -18,11 +17,16 @@ const SearchPage: NextPage<Props> = () => {
   const [offset, setOffset] = useState<number>(0);
   const [tracks, setTracks] = useState<Track[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-
-  // TODO: initially load from backend
+  const { partyId } = useContext(PartyContext);
   const [playlist, setPlaylist] = useState<string[]>([]);
 
-  const { partyId } = useContext(PartyContext);
+  useEffect(() => {
+    const fetchPlaylist = async () => {
+      const initialPlaylist = await fetcher(`${config.apiBaseUrl}/parties/${partyId}/playlist`);
+      setPlaylist(initialPlaylist);
+    };
+    fetchPlaylist();
+  }, [partyId, setPlaylist]);
 
   const handleQueryChange = useCallback(
     async (event) => {
@@ -55,20 +59,26 @@ const SearchPage: NextPage<Props> = () => {
   }, [offset, setOffset, tracks, query]);
 
   const onAddClick = useCallback(
-    (trackId: string) => {
+    async (trackId: string) => {
       setPlaylist([...playlist, trackId]);
-      // TODO: call backend to add track
+      await fetcher(`${config.apiBaseUrl}/parties/${partyId}/playlist`, {
+        method: 'POST',
+        body: JSON.stringify(trackId),
+      });
     },
-    [playlist, setPlaylist],
+    [partyId, playlist, setPlaylist],
   );
 
   const onRemoveClick = useCallback(
-    (trackId: string) => {
+    async (trackId: string) => {
       const index = playlist.indexOf(trackId);
       setPlaylist([...playlist.slice(0, index), ...playlist.slice(index + 1)]);
-      // TODO: call backend to remove track
+      await fetcher(`${config.apiBaseUrl}/parties/${partyId}/playlist`, {
+        method: 'DELETE',
+        body: JSON.stringify(trackId),
+      });
     },
-    [playlist, setPlaylist],
+    [partyId, playlist, setPlaylist],
   );
 
   return (
