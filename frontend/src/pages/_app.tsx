@@ -10,17 +10,22 @@ import queryString from 'querystring';
 import cookie from 'cookie';
 
 import { AuthProvider } from '../contexts/AuthContext';
+import { PartyProvider } from '../contexts/PartyContext';
+import useParty from '../hooks/useParty';
 
 const App = ({ Component, pageProps }: AppProps) => {
   const { accessToken, ...actualPageProps } = pageProps;
+  const party = useParty();
 
   return (
     <CacheProvider value={cache}>
       <ThemeProvider>
         <CSSReset />
         <AuthProvider value={{ accessToken }}>
-          {/* eslint-disable-next-line react/jsx-props-no-spreading */}
-          <Component {...actualPageProps} />
+          <PartyProvider value={party}>
+            {/* eslint-disable-next-line react/jsx-props-no-spreading */}
+            <Component {...actualPageProps} />
+          </PartyProvider>
         </AuthProvider>
       </ThemeProvider>
     </CacheProvider>
