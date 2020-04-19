@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useCallback } from 'react';
+import React, { FunctionComponent, useContext, useCallback } from 'react';
 
 import { Box, Heading, IconButton, Stack, Text } from '@chakra-ui/core';
 import Link from 'next/link';
@@ -7,6 +7,7 @@ import { mutate } from 'swr';
 import { Party } from '../../interfaces';
 import config from '../../config';
 import fetcher from '../../util/fetcher';
+import { PartyContext } from '../../contexts/PartyContext';
 
 type Props = {
   party: Party;
@@ -14,12 +15,19 @@ type Props = {
 
 const PartyListItem: FunctionComponent<Props> = ({ party, ...rest }) => {
   const { name, topic, id } = party;
+  const { partyId, setCurrentPartyId } = useContext(PartyContext);
+
+  const onSelectClick = useCallback(() => {
+    setCurrentPartyId(id);
+  }, [id, setCurrentPartyId]);
+
   const onDeleteClick = useCallback(async () => {
     await mutate(`${config.apiBaseUrl}/parties`, async (parties: Party[]) => {
       await fetcher(`${config.apiBaseUrl}/parties/${id}`, { method: 'DELETE' });
       return [...parties.filter((_party) => _party.id !== id)];
     });
   }, [id]);
+
   return (
     <Box
       backgroundColor="#ffffff"
@@ -35,8 +43,31 @@ const PartyListItem: FunctionComponent<Props> = ({ party, ...rest }) => {
         <Stack spacing="4px">
           <Heading fontSize="xl">{name}</Heading>
           <Text>{topic}</Text>
+          <Text>{id}</Text>
         </Stack>
       </Box>
+      {partyId === id ? (
+        <IconButton
+          variantColor="yellow"
+          aria-label="Select Party"
+          size="lg"
+          icon="star"
+          variant="solid"
+          padding="8px"
+          marginRight="8px"
+        />
+      ) : (
+        <IconButton
+          variantColor="yellow"
+          aria-label="Select Party"
+          size="lg"
+          icon="star"
+          variant="outline"
+          onClick={onSelectClick}
+          padding="8px"
+          marginRight="8px"
+        />
+      )}
       <IconButton
         variantColor="red"
         aria-label="Delete Party"
