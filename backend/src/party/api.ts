@@ -90,5 +90,85 @@ export default fastifyPlugin(async (server, opts, next) => {
     }
   });
 
+  server.post('/parties/:id/playlist', async (request, reply) => {
+    try {
+      const { body } = request;
+      const {
+        params: { id },
+      } = request;
+      const party = await Party.findOne({ id });
+
+      if (!party) {
+        reply.send(HttpStatus.NOT_FOUND);
+      }
+
+      const editedPlaylist = await Party.findOneAndUpdate(
+        { id },
+        {
+          $push: {
+            playlist: body,
+          },
+        },
+        {
+          new: true,
+        },
+      );
+
+      reply.code(HttpStatus.OK).send(editedPlaylist.playlist);
+    } catch (error) {
+      request.log.error(error);
+      reply.send(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  });
+
+  server.delete('/parties/:id/playlist', async (request, reply) => {
+    try {
+      const { body } = request;
+      const {
+        params: { id },
+      } = request;
+      const party = await Party.findOne({ id });
+
+      if (!party) {
+        reply.send(HttpStatus.NOT_FOUND);
+      }
+
+      const editedPlaylist = await Party.findOneAndUpdate(
+        { id },
+        {
+          $pull: {
+            playlist: body,
+          },
+        },
+        {
+          new: true,
+        },
+      );
+
+      reply.code(HttpStatus.OK).send(editedPlaylist.playlist);
+    } catch (error) {
+      request.log.error(error);
+      reply.send(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  });
+
+  server.get('/parties/:id/playlist', async (request, reply) => {
+    try {
+      const {
+        params: { id },
+      } = request;
+      const party = await Party.findOne({ id });
+
+      if (!party) {
+        reply.send(HttpStatus.NOT_FOUND);
+      }
+
+      reply.code(HttpStatus.OK).send(party.playlist);
+    } catch (error) {
+      request.log.error(error);
+      reply.send(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  });
+
   next();
 });

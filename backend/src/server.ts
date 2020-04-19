@@ -8,7 +8,7 @@ import fastifyCookie from 'fastify-cookie';
 import { IncomingMessage, Server, ServerResponse } from 'http';
 
 import SwaggerOptions from './swagger';
-import searchApi from './search/api';
+import spotifyApi from './spotify/api';
 import partyApi from './party/api';
 import userApi from './user/api';
 
@@ -24,7 +24,7 @@ if (process.env.NODE_ENV !== 'production') {
 }
 server.register(fastifyCors);
 server.register(fastifyCookie);
-server.register(searchApi);
+server.register(spotifyApi);
 server.register(partyApi);
 server.register(userApi);
 
