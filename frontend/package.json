@@ -2,10 +2,10 @@
   "name": "@krawumms/frontend",
   "version": "1.0.0",
   "scripts": {
-    "dev": "nodemon",
-    "build": "next build && tsc --project tsconfig.server.json",
+    "dev": "next dev",
+    "build": "next build",
     "build:lcov": "yarn lint && yarn test:lcov && yarn build",
-    "start": "cross-env NODE_ENV=production node dist/index.js",
+    "start": "next start",
     "type-check": "tsc",
     "lint": "eslint '*/**/*.{js,ts,tsx}'",
     "test": "cross-env NODE_ENV=test jest",
@@ -16,6 +16,7 @@
     "@chakra-ui/core": "^0.7.0",
     "@emotion/core": "^10.0.28",
     "@emotion/styled": "^10.0.27",
+    "cookie": "^0.4.0",
     "cypress": "^4.2.0",
     "dotenv-webpack": "^1.7.0",
     "emotion": "^10.0.27",
@@ -36,6 +37,7 @@
     "swr": "^0.1.18"
   },
   "devDependencies": {
+    "@types/cookie": "^0.3.3",
     "@types/jest": "^25.2.1",
     "@types/node": "^13.11.1",
     "@types/react": "^16.9.34",

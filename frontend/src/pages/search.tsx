@@ -29,7 +29,7 @@ const SearchPage: NextPage<Props> = () => {
         limit,
       });
 
-      const newTracks = await fetcher(`${config.apiBaseUrl}/search?${params}`);
+      const newTracks = await fetcher(`${config.apiBridgeBaseUrl}/search?${params}`);
       setTracks(newTracks);
       setIsLoading(false);
     },
