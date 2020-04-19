@@ -1,6 +1,6 @@
 import React, { FunctionComponent, useCallback } from 'react';
 
-import { Box, Heading, IconButton, Stack, Text } from '@chakra-ui/core';
+import { Box, Editable, EditableInput, EditablePreview, Heading, IconButton, Stack, Text } from '@chakra-ui/core';
 import Link from 'next/link';
 
 import { mutate } from 'swr';
@@ -14,12 +14,24 @@ type Props = {
 
 const PartyListItem: FunctionComponent<Props> = ({ party, ...rest }) => {
   const { name, topic, id } = party;
+  const [partyState] = React.useState(party);
   const onDeleteClick = useCallback(async () => {
     await mutate(`${config.apiBaseUrl}/parties`, async (parties: Party[]) => {
       await fetcher(`${config.apiBaseUrl}/parties/${id}`, { method: 'DELETE' });
       return [...parties.filter((_party) => _party.id !== id)];
     });
   }, [id]);
+
+  const handleChangeSubmit = useCallback(async () => {
+    await mutate(`${config.apiBaseUrl}/parties`, async (parties: Party[]) => {
+      await fetcher(`${config.apiBaseUrl}/parties/${id}`, {
+        method: 'PUT',
+        body: `{"name":"${partyState.name}","topic":"${partyState.topic}"}`,
+      });
+      return [...parties.filter((_party) => _party.id !== id)];
+    });
+  }, [id]);
+
   return (
     <Box
       backgroundColor="#ffffff"
@@ -33,8 +45,30 @@ const PartyListItem: FunctionComponent<Props> = ({ party, ...rest }) => {
     >
       <Box flex="1" padding="16px">
         <Stack spacing="4px">
-          <Heading fontSize="xl">{name}</Heading>
-          <Text>{topic}</Text>
+          <Heading fontSize="xl">
+            <Editable
+              defaultValue={name}
+              onChange={(e) => {
+                partyState.name = e.toString();
+              }}
+              onSubmit={handleChangeSubmit}
+            >
+              <EditableInput />
+              <EditablePreview />
+            </Editable>
+          </Heading>
+          <Text>
+            <Editable
+              defaultValue={topic}
+              onChange={(e) => {
+                partyState.topic = e.toString();
+              }}
+              onSubmit={handleChangeSubmit}
+            >
+              <EditableInput />
+              <EditablePreview />
+            </Editable>
+          </Text>
         </Stack>
       </Box>
       <IconButton

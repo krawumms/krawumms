@@ -85,7 +85,7 @@ export default fastifyPlugin(async (server, opts, next) => {
       }
 
       const editedParty = await Party.findOneAndUpdate(
-        id,
+        { id },
         {
           ...body,
         },
