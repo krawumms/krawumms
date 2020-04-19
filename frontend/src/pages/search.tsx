@@ -25,7 +25,9 @@ const SearchPage: NextPage<Props> = () => {
       const initialPlaylist = await fetcher(`${config.apiBaseUrl}/parties/${partyId}/playlist`);
       setPlaylist(initialPlaylist);
     };
-    fetchPlaylist();
+    if (partyId !== 0) {
+      fetchPlaylist();
+    }
   }, [partyId, setPlaylist]);
 
   const handleQueryChange = useCallback(
@@ -88,13 +90,6 @@ const SearchPage: NextPage<Props> = () => {
 
         {/* to remove, only for dev/debug */}
         <Text>Currently On Party: {partyId}</Text>
-        <Text>Current Playlist Content:</Text>
-        <ul>
-          {playlist.map((track: string) => {
-            return <li>{track}</li>;
-          })}
-        </ul>
-
         <Box padding="32px" width={['100%', '75%', '50%']}>
           <Input variant="filled" onChange={handleQueryChange} placeholder="Search" />
         </Box>
