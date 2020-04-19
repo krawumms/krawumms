@@ -34,11 +34,11 @@ const PartyComponent: FunctionComponent<Props> = ({ party }) => {
           overflowY="auto"
           padding="8px"
         >
-          {tracks.map(({ name: trackName, id, artists, album: { images } }) => {
+          {tracks.map(({ name: trackName, id: trackId, artists, album: { images } }) => {
             const { url } = images.find(({ height }) => height === 64) || {};
             return (
               <Box
-                key={id}
+                key={trackId}
                 backgroundColor="#ffffff"
                 padding="16px"
                 boxShadow="lg"
@@ -58,7 +58,7 @@ const PartyComponent: FunctionComponent<Props> = ({ party }) => {
                   </Heading>
 
                   {/* to remove, only for dev/debug */}
-                  <Text>{id}</Text>
+                  <Text>{trackId}</Text>
 
                   <Text>{artists.map((artist) => artist.name).join(', ')}</Text>
                 </Box>
