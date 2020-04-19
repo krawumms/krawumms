@@ -21,9 +21,8 @@ const server: fastify.FastifyInstance<Server, IncomingMessage, ServerResponse> =
 if (process.env.NODE_ENV !== 'production') {
   server.register(fastifyBlipp);
   server.register(swagger, SwaggerOptions);
-  server.register(fastifyCors);
 }
-
+server.register(fastifyCors);
 server.register(fastifyCookie);
 server.register(searchApi);
 server.register(partyApi);
