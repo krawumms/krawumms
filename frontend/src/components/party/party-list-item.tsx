@@ -30,7 +30,7 @@ const PartyListItem: FunctionComponent<Props> = ({ party, ...rest }) => {
       });
       return [...parties.filter((_party) => _party.id !== id)];
     });
-  }, [id]);
+  }, [id, partyState.name, partyState.topic]);
 
   return (
     <Box
