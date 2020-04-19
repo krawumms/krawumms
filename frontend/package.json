@@ -17,7 +17,7 @@
     "@emotion/core": "^10.0.28",
     "@emotion/styled": "^10.0.27",
     "cookie": "^0.4.0",
-    "cypress": "^4.2.0",
+    "cypress": "^4.4.0",
     "dotenv-webpack": "^1.7.0",
     "emotion": "^10.0.27",
     "emotion-server": "^10.0.27",
@@ -34,7 +34,7 @@
     "react-dom": "^16.13.1",
     "react-final-form": "^6.4.0",
     "spotify-web-api-node": "^4.0.0",
-    "swr": "^0.1.18"
+    "swr": "^0.2.0"
   },
   "devDependencies": {
     "@types/cookie": "^0.3.3",
