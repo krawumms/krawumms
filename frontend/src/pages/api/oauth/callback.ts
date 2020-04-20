@@ -29,7 +29,6 @@ const callback = async (req: NextApiRequest, res: NextApiResponse & { cookie: Fu
         .end();
       res.end();
     } catch (error) {
-      console.error(error);
       res.status(HttpStatus.INTERNAL_SERVER_ERROR).end();
     }
   }
