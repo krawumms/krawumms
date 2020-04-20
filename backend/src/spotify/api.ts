@@ -16,7 +16,6 @@ export default fastifyPlugin(async (server, opts, next) => {
     }
   });
 
-
   server.get('/tracks', async (request, reply) => {
     try {
       const { ids } = request.query;
