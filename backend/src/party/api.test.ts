@@ -73,5 +73,11 @@ describe('Test party api', () => {
       body: 'Test',
     });
     expect(response.status).toEqual(OK);
+
+  it('Should return 404 for invalid ID in PUT', async () => {
+    const response = await request(server.server).put('/parties/1111').send();
+
+    expect(response.status).toEqual(OK);
+    expect(response.body).toEqual(404);
   });
 });
