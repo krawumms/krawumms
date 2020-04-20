@@ -21,7 +21,7 @@ const mongo = async ({ uri }: { uri: string }) => {
   });
 
   if (!connection) {
-    connection = await Mongoose.createConnection(uri, options);
+    connection = await Mongoose.connect(uri, options);
   }
 };
 
