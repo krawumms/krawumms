@@ -7,6 +7,7 @@ export interface PartyDocument extends Document {
   name: string;
   topic: string;
   owner: string;
+  code: string;
   playlist: string[];
 }
 
@@ -19,6 +20,7 @@ export const PartySchema: Schema = new Schema(
     topic: String,
     owner: String,
     playlist: Array,
+    code: String,
   },
   { collection: 'party' },
 );

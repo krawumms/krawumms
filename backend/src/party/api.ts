@@ -1,6 +1,7 @@
 import fastifyPlugin from 'fastify-plugin';
 import HttpStatus from 'http-status-codes';
 import { v4 as uuid } from 'uuid';
+import secureRandomString from 'secure-random-string';
 
 import { Party } from './model';
 
@@ -32,8 +33,11 @@ export default fastifyPlugin(async (server, opts, next) => {
   server.post('/parties', { schema: AddPartySchema }, async (request, reply) => {
     try {
       const { body } = request;
+      const code = await secureRandomString({ alphanumeric: true, length: 8 });
       const party = await Party.create({
         id: uuid(),
+        playlist: [],
+        code,
         ...body,
       });
 
@@ -60,6 +64,24 @@ export default fastifyPlugin(async (server, opts, next) => {
         params: { id },
       } = request;
       const party = await Party.findOne({ id });
+
+      if (!party) {
+        reply.send(HttpStatus.NOT_FOUND);
+      }
+
+      reply.code(HttpStatus.OK).send(party);
+    } catch (error) {
+      request.log.error(error);
+      reply.send(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  });
+
+  server.get('/parties/byCode/:code', async (request, reply) => {
+    try {
+      const {
+        params: { code },
+      } = request;
+      const party = await Party.findOne({ code });
 
       if (!party) {
         reply.send(HttpStatus.NOT_FOUND);
@@ -113,6 +135,35 @@ export default fastifyPlugin(async (server, opts, next) => {
       } else {
         reply.send(HttpStatus.NOT_FOUND);
       }
+    } catch (error) {
+      request.log.error(error);
+      reply.send(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  });
+
+  server.put('/parties/:id/playlist', async (request, reply) => {
+    try {
+      const { body } = request;
+      const {
+        params: { id },
+      } = request;
+      const party = await Party.findOne({ id });
+
+      if (!party) {
+        reply.send(HttpStatus.NOT_FOUND);
+      }
+
+      const editedParty = await Party.findOneAndUpdate(
+        { id },
+        {
+          ...body,
+        },
+        {
+          new: true,
+        },
+      );
+
+      reply.code(HttpStatus.OK).send(editedParty);
     } catch (error) {
       request.log.error(error);
       reply.send(HttpStatus.INTERNAL_SERVER_ERROR);
