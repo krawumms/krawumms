@@ -9,18 +9,13 @@ const spotifyApi = new SpotifyWebApi({
 
 const createSpotifyApi = async () => {
   const { body: token } = await spotifyApi.clientCredentialsGrant();
-
   spotifyApi.setAccessToken(token.access_token);
-
   return spotifyApi;
 };
 
 // eslint-disable-next-line
 const createUserSpotifyApi = async (accessToken: string) => {
-  console.log(accessToken);
-
   spotifyApi.setAccessToken(accessToken);
-
   return spotifyApi;
 };
 
