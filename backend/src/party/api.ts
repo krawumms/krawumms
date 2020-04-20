@@ -90,7 +90,7 @@ export default fastifyPlugin(async (server, opts, next) => {
     }
   });
 
-  server.post('/parties/:id/playlist', async (request, reply) => {
+  server.put('/parties/:id/playlist', async (request, reply) => {
     try {
       const { body } = request;
       const {
@@ -102,7 +102,7 @@ export default fastifyPlugin(async (server, opts, next) => {
         reply.send(HttpStatus.NOT_FOUND);
       }
 
-      const editedPlaylist = await Party.findOneAndUpdate(
+      const editedParty = await Party.findOneAndUpdate(
         { id },
         {
           $push: {
@@ -114,7 +114,7 @@ export default fastifyPlugin(async (server, opts, next) => {
         },
       );
 
-      reply.code(HttpStatus.OK).send(editedPlaylist.playlist);
+      reply.code(HttpStatus.OK).send(editedParty.playlist);
     } catch (error) {
       request.log.error(error);
       reply.send(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -133,7 +133,7 @@ export default fastifyPlugin(async (server, opts, next) => {
         reply.send(HttpStatus.NOT_FOUND);
       }
 
-      const editedPlaylist = await Party.findOneAndUpdate(
+      const editedParty = await Party.findOneAndUpdate(
         { id },
         {
           $pull: {
@@ -145,7 +145,7 @@ export default fastifyPlugin(async (server, opts, next) => {
         },
       );
 
-      reply.code(HttpStatus.OK).send(editedPlaylist.playlist);
+      reply.code(HttpStatus.OK).send(editedParty.playlist);
     } catch (error) {
       request.log.error(error);
       reply.send(HttpStatus.INTERNAL_SERVER_ERROR);

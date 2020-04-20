@@ -64,7 +64,7 @@ const SearchPage: NextPage<Props> = () => {
     async (trackId: string) => {
       setPlaylist([...playlist, trackId]);
       await fetcher(`${config.apiBaseUrl}/parties/${partyId}/playlist`, {
-        method: 'POST',
+        method: 'PUT',
         body: JSON.stringify(trackId),
       });
     },
