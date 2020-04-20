@@ -59,7 +59,6 @@ describe('Test party api', () => {
 
   it('Should get songs from playlist', async () => {
     const response = await request(server.server).get('/parties/1/playlist');
-    console.log(response.body)
     expect(response.body.length).toEqual(1);
     expect(response.status).toEqual(OK);
   });
