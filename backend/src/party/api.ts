@@ -58,24 +58,6 @@ export default fastifyPlugin(async (server, opts, next) => {
     }
   });
 
-  server.get('/parties/:id', async (request, reply) => {
-    try {
-      const {
-        params: { id },
-      } = request;
-      const party = await Party.findOne({ id });
-
-      if (!party) {
-        reply.send(HttpStatus.NOT_FOUND);
-      }
-
-      reply.code(HttpStatus.OK).send(party);
-    } catch (error) {
-      request.log.error(error);
-      reply.send(HttpStatus.INTERNAL_SERVER_ERROR);
-    }
-  });
-
   server.get('/parties/byCode/:code', async (request, reply) => {
     try {
       const {
@@ -275,8 +257,25 @@ export default fastifyPlugin(async (server, opts, next) => {
       if (!party) {
         reply.send(HttpStatus.NOT_FOUND);
       }
-
       reply.code(HttpStatus.OK).send(party.playlist);
+    } catch (error) {
+      request.log.error(error);
+      reply.send(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  });
+
+  server.get('/parties/:id', async (request, reply) => {
+    try {
+      const {
+        params: { id },
+      } = request;
+      const party = await Party.findOne({ id });
+
+      if (!party) {
+        reply.send(HttpStatus.NOT_FOUND);
+      }
+
+      reply.code(HttpStatus.OK).send(party);
     } catch (error) {
       request.log.error(error);
       reply.send(HttpStatus.INTERNAL_SERVER_ERROR);

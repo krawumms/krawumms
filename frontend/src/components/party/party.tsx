@@ -22,7 +22,7 @@ const PartyComponent: FunctionComponent<Props> = ({ party }) => {
     refreshInterval: 1000,
   });
 
-  if (playlist) {
+  if (playlist && playlist.length) {
     playlist.sort((a, b) => b.votes - a.votes);
   }
   const trackIds = playlist && playlist.map((track) => track.id);
@@ -58,7 +58,7 @@ const PartyComponent: FunctionComponent<Props> = ({ party }) => {
 
   return (
     <Box padding="16px" display="flex" flexDirection="column" alignItems="center">
-      <Box>
+      <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center">
         <PartyIcon />
         <Heading as="h1" size="xl">
           {name}
