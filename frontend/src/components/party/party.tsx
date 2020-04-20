@@ -4,6 +4,8 @@ import useSWR, { mutate } from 'swr';
 import { Party, Track } from '../../interfaces';
 import fetcher from '../../util/fetcher';
 import config from '../../config';
+import Search from './search';
+import PartyIcon from '../../icons/party.svg';
 
 type Props = {
   party: Party;
@@ -55,16 +57,20 @@ const PartyComponent: FunctionComponent<Props> = ({ party }) => {
   );
 
   return (
-    <Box padding="16px">
-      <Heading as="h1" size="xl">
-        {name}
-      </Heading>
-      <Stack spacing="4px">
-        <Text>{topic}</Text>
-        <Text>Code: {code}</Text>
-        <Text>{createdAt}</Text>
-        <Text>{updatedAt}</Text>
-      </Stack>
+    <Box padding="16px" display="flex" flexDirection="column" alignItems="center">
+      <Box>
+        <PartyIcon />
+        <Heading as="h1" size="xl">
+          {name}
+        </Heading>
+        <Stack spacing="4px">
+          <Text>{topic}</Text>
+          <Text>Code: {code}</Text>
+          <Text>{createdAt}</Text>
+          <Text>{updatedAt}</Text>
+        </Stack>
+      </Box>
+      <Search />
       {Array.isArray(tracks) && Boolean(tracks.length) && (
         <Stack
           width={['100%', '75%', '50%']}
