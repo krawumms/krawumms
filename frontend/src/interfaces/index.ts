@@ -29,6 +29,7 @@ export type Party = {
   id: number;
   name: string;
   topic: string;
+  code: string;
   createdAt: Date;
   updatedAt: Date;
 };

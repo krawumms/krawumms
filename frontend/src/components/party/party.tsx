@@ -15,7 +15,7 @@ type PlaylistTrack = {
 };
 
 const PartyComponent: FunctionComponent<Props> = ({ party }) => {
-  const { id, name, topic, createdAt, updatedAt } = party;
+  const { id, name, topic, createdAt, updatedAt, code } = party;
   const { data: playlist } = useSWR<PlaylistTrack[]>(`${config.apiBaseUrl}/parties/${id}/playlist`, fetcher, {
     refreshInterval: 1000,
   });
@@ -61,6 +61,7 @@ const PartyComponent: FunctionComponent<Props> = ({ party }) => {
       </Heading>
       <Stack spacing="4px">
         <Text>{topic}</Text>
+        <Text>Code: {code}</Text>
         <Text>{createdAt}</Text>
         <Text>{updatedAt}</Text>
       </Stack>
