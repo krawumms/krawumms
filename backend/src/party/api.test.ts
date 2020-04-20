@@ -50,28 +50,28 @@ describe('Test party api', () => {
   });
 
   it('Should add song to playlist', async () => {
-    const response = await request(server.server)
-      .put('/parties/1/playlist')
-      .send({
-        playlist: ['Test', 'Test1'],
-      });
+    const response = await request(server.server).put('/parties/1/playlist').send({
+      id: 'test',
+    });
     expect(response.status).toEqual(OK);
-    expect(response.body.length).toEqual(1);
-    expect(response.body[0].playlist.length).toEqual(2);
-    expect(response.body[0].playlist[0]).toBe('Test');
+    expect(response.body.playlist.length).toEqual(1);
   });
 
   it('Should get songs from playlist', async () => {
     const response = await request(server.server).get('/parties/1/playlist');
-    expect(response.body[0].playlist).toStrictEqual(['Test', 'Test1']);
-    expect(response.body[0].playlist.length).toEqual(2);
+    console.log(response.body)
+    expect(response.body.length).toEqual(1);
     expect(response.status).toEqual(OK);
   });
 
   it('Should delete song from playlist', async () => {
-    const response = await request(server.server).delete('/parties/1/playlist').send({
-      body: 'Test',
-    });
+    const response = await request(server.server)
+      .delete('/parties/1/playlist')
+      .send({
+        body: {
+          id: 'Test',
+        },
+      });
     expect(response.status).toEqual(OK);
   });
 
