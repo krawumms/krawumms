@@ -1,7 +1,7 @@
 import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { NextPage } from 'next';
 import queryString from 'querystring';
-import { Box, Button, Heading, Icon, Image, Input, Spinner, Stack, Text, IconButton } from '@chakra-ui/core';
+import { Box, Button, Heading, Icon, IconButton, Image, Input, Spinner, Stack, Text } from '@chakra-ui/core';
 import Layout from '../components/Layout';
 import fetcher from '../util/fetcher';
 import { Track } from '../interfaces';
@@ -65,7 +65,7 @@ const SearchPage: NextPage<Props> = () => {
       setPlaylist([...playlist, trackId]);
       await fetcher(`${config.apiBaseUrl}/parties/${partyId}/playlist`, {
         method: 'PUT',
-        body: JSON.stringify(trackId),
+        body: JSON.stringify({ id: trackId }),
       });
     },
     [partyId, playlist, setPlaylist],
@@ -77,7 +77,7 @@ const SearchPage: NextPage<Props> = () => {
       setPlaylist([...playlist.slice(0, index), ...playlist.slice(index + 1)]);
       await fetcher(`${config.apiBaseUrl}/parties/${partyId}/playlist`, {
         method: 'DELETE',
-        body: JSON.stringify(trackId),
+        body: JSON.stringify({ id: trackId }),
       });
     },
     [partyId, playlist, setPlaylist],

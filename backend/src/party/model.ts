@@ -2,16 +2,26 @@ import { Document, Model, model, Schema } from 'mongoose';
 import mongooseHidden from 'mongoose-hidden';
 import mongooseTimestamp from 'mongoose-timestamp';
 
+export interface Track {
+  id: string;
+  votes: number;
+}
+
 export interface PartyDocument extends Document {
   id: string;
   name: string;
   topic: string;
   owner: string;
   code: string;
-  playlist: string[];
+  playlist: Array<Track>;
 }
 
 export type PartyModel = PartyDocument;
+
+export const TrackSchema: Schema = new Schema({
+  id: String,
+  votes: Number,
+});
 
 export const PartySchema: Schema = new Schema(
   {
@@ -19,7 +29,7 @@ export const PartySchema: Schema = new Schema(
     name: String,
     topic: String,
     owner: String,
-    playlist: Array,
+    playlist: [TrackSchema],
     code: String,
   },
   { collection: 'party' },
