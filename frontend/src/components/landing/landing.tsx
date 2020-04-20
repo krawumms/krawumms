@@ -1,13 +1,15 @@
-import React, { FunctionComponent, useCallback } from 'react';
+import React, { FunctionComponent, useCallback, useContext } from 'react';
 import { Box, Button, Flex, Stack, Text } from '@chakra-ui/core';
 import { useRouter } from 'next/router';
 import { Form } from 'react-final-form';
 import InputControl from '../form/input-control';
 import config from '../../config';
 import fetcher from '../../util/fetcher';
+import { PartyContext } from '../../contexts/PartyContext';
 
 const Landing: FunctionComponent = () => {
   const { push } = useRouter();
+  const { setCurrentPartyId } = useContext(PartyContext);
   const onCreateClick = useCallback(() => {
     push('/parties');
   }, [push]);
@@ -18,13 +20,14 @@ const Landing: FunctionComponent = () => {
       try {
         const party = await fetcher(`${config.apiBaseUrl}/parties/byCode/${code}`, { method: 'GET' });
         if (party && party.id) {
-          push(`/parties/${party.id}`);
+          setCurrentPartyId(party.id);
+          push('/parties/[id]', `/parties/${party.id}`);
         }
       } catch (e) {
         console.log(e);
       }
     },
-    [push],
+    [push, setCurrentPartyId],
   );
 
   return (

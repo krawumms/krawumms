@@ -1,12 +1,12 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { NextPage } from 'next';
 import queryString from 'querystring';
-
-import { Box, Button, Heading, Icon, Image, Input, Spinner, Stack, Text } from '@chakra-ui/core';
+import { Box, Button, Heading, Icon, IconButton, Image, Input, Spinner, Stack, Text } from '@chakra-ui/core';
 import Layout from '../components/Layout';
 import fetcher from '../util/fetcher';
 import { Track } from '../interfaces';
 import config from '../config';
+import { PartyContext } from '../contexts/PartyContext';
 
 type Props = {};
 
@@ -17,6 +17,18 @@ const SearchPage: NextPage<Props> = () => {
   const [offset, setOffset] = useState<number>(0);
   const [tracks, setTracks] = useState<Track[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const { partyId } = useContext(PartyContext);
+  const [playlist, setPlaylist] = useState<string[]>([]);
+
+  useEffect(() => {
+    const fetchPlaylist = async () => {
+      const initialPlaylist = await fetcher(`${config.apiBaseUrl}/parties/${partyId}/playlist`);
+      setPlaylist(initialPlaylist);
+    };
+    if (partyId !== 0) {
+      fetchPlaylist();
+    }
+  }, [partyId, setPlaylist]);
 
   const handleQueryChange = useCallback(
     async (event) => {
@@ -48,10 +60,36 @@ const SearchPage: NextPage<Props> = () => {
     setOffset(newOffset);
   }, [offset, setOffset, tracks, query]);
 
+  const onAddClick = useCallback(
+    async (trackId: string) => {
+      setPlaylist([...playlist, trackId]);
+      await fetcher(`${config.apiBaseUrl}/parties/${partyId}/playlist`, {
+        method: 'PUT',
+        body: JSON.stringify({ id: trackId }),
+      });
+    },
+    [partyId, playlist, setPlaylist],
+  );
+
+  const onRemoveClick = useCallback(
+    async (trackId: string) => {
+      const index = playlist.indexOf(trackId);
+      setPlaylist([...playlist.slice(0, index), ...playlist.slice(index + 1)]);
+      await fetcher(`${config.apiBaseUrl}/parties/${partyId}/playlist`, {
+        method: 'DELETE',
+        body: JSON.stringify({ id: trackId }),
+      });
+    },
+    [partyId, playlist, setPlaylist],
+  );
+
   return (
     <Layout title="Search | Krawumms">
       <Box padding="16px" display="flex" flexDirection="column" alignItems="center" justifyContent="center">
         <Heading as="h1">Search tracks on Spotify</Heading>
+
+        {/* to remove, only for dev/debug */}
+        <Text>Currently On Party: {partyId}</Text>
         <Box padding="32px" width={['100%', '75%', '50%']}>
           <Input variant="filled" onChange={handleQueryChange} placeholder="Search" />
         </Box>
@@ -85,8 +123,35 @@ const SearchPage: NextPage<Props> = () => {
                     <Heading as="h2" size="md">
                       {name}
                     </Heading>
+
+                    {/* to remove, only for dev/debug */}
+                    <Text>{id}</Text>
+
                     <Text>{artists.map((artist) => artist.name).join(', ')}</Text>
                   </Box>
+                  {partyId !== 0 && (
+                    <Box marginLeft="auto">
+                      {playlist.includes(id) ? (
+                        <IconButton
+                          variantColor="red"
+                          aria-label="Remove from Playlist"
+                          size="lg"
+                          icon="minus"
+                          onClick={() => onRemoveClick(id)}
+                          padding="8px"
+                        />
+                      ) : (
+                        <IconButton
+                          variantColor="green"
+                          aria-label="Add to Playlist"
+                          size="lg"
+                          icon="add"
+                          onClick={() => onAddClick(id)}
+                          padding="8px"
+                        />
+                      )}
+                    </Box>
+                  )}
                 </Box>
               );
             })}

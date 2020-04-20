@@ -1,5 +1,5 @@
 import * as React from 'react';
-import NextApp from 'next/app';
+import { AppProps } from 'next/app';
 import { CacheProvider } from '@emotion/core';
 // Use only { cache } from 'emotion'. Don't use { css }.
 import { cache } from 'emotion';
@@ -8,58 +8,61 @@ import { AppInitialProps } from 'next/dist/next-server/lib/utils';
 import { AppContext } from 'next/dist/pages/_app';
 import queryString from 'querystring';
 import cookie from 'cookie';
-import { Provider } from '../components/auth/context';
 
-type Props = {
-  accessToken: any;
+import { AuthProvider } from '../contexts/AuthContext';
+import { PartyProvider } from '../contexts/PartyContext';
+import useParty from '../hooks/useParty';
+
+const App = ({ Component, pageProps }: AppProps) => {
+  const { accessToken, ...actualPageProps } = pageProps;
+  const party = useParty();
+
+  return (
+    <CacheProvider value={cache}>
+      <ThemeProvider>
+        <CSSReset />
+        <AuthProvider value={{ accessToken }}>
+          <PartyProvider value={party}>
+            {/* eslint-disable-next-line react/jsx-props-no-spreading */}
+            <Component {...actualPageProps} />
+          </PartyProvider>
+        </AuthProvider>
+      </ThemeProvider>
+    </CacheProvider>
+  );
 };
 
-export default class App extends NextApp<Props> {
-  static async getInitialProps({ Component, ctx }: AppContext): Promise<AppInitialProps> {
-    let pageProps = {};
+App.getInitialProps = async ({ Component, ctx }: AppContext): Promise<AppInitialProps> => {
+  let pageProps = {};
 
-    if (Component.getInitialProps) {
-      pageProps = await Component.getInitialProps(ctx);
-    }
+  if (Component.getInitialProps) {
+    pageProps = await Component.getInitialProps(ctx);
+  }
 
-    const { req } = ctx;
-    const cookies = cookie.parse(req?.headers.cookie || '');
-    const token = queryString.parse(cookies.krawummsToken as string);
+  const { req } = ctx;
+  const cookies = cookie.parse(req?.headers.cookie || '');
+  const token = queryString.parse(cookies.krawummsToken as string);
+  // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+  // @ts-ignore
+  // eslint-disable-next-line no-underscore-dangle
+  let accessToken = token;
+
+  if (!req) {
     // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
     // @ts-ignore
-    // eslint-disable-next-line no-underscore-dangle
-    let accessToken = token;
-
-    if (!req) {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
-      // @ts-ignore
-      accessToken = window?.__NEXT_DATA__?.props?.accessToken;
-    } else {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
-      // @ts-ignore
-      req.accessToken = accessToken;
-    }
-
-    return {
-      pageProps,
-      // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
-      // @ts-ignore
-      accessToken,
-    };
+    accessToken = window?.__NEXT_DATA__?.props?.accessToken;
+  } else {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+    // @ts-ignore
+    req.accessToken = accessToken;
   }
 
-  render() {
-    const { Component, pageProps, accessToken } = this.props;
-    return (
-      <CacheProvider value={cache}>
-        <ThemeProvider>
-          <CSSReset />
-          <Provider value={{ accessToken }}>
-            {/* eslint-disable-next-line react/jsx-props-no-spreading */}
-            <Component {...pageProps} />
-          </Provider>
-        </ThemeProvider>
-      </CacheProvider>
-    );
-  }
-}
+  return {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+    // @ts-ignore
+    accessToken,
+    pageProps,
+  };
+};
+
+export default App;
