@@ -54,7 +54,7 @@ export default (Page: NextPage<any>) => {
         req.accessToken = accessToken;
       }
 
-      if (!accessToken) {
+      if (!accessToken || Object.keys(accessToken).length === 0) {
         await triggerAuthCodeGrant(res, context.asPath);
         return {};
       }

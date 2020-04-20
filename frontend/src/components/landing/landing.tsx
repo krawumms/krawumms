@@ -1,12 +1,31 @@
 import React, { FunctionComponent, useCallback } from 'react';
-import { Box, Button, Flex, Input, Stack, Text } from '@chakra-ui/core';
+import { Box, Button, Flex, Stack, Text } from '@chakra-ui/core';
 import { useRouter } from 'next/router';
+import { Form } from 'react-final-form';
+import InputControl from '../form/input-control';
+import config from '../../config';
+import fetcher from '../../util/fetcher';
 
 const Landing: FunctionComponent = () => {
   const { push } = useRouter();
   const onCreateClick = useCallback(() => {
     push('/parties');
   }, [push]);
+
+  const handleFormSubmit = useCallback(
+    async (values) => {
+      const { code } = values;
+      try {
+        const party = await fetcher(`${config.apiBaseUrl}/parties/byCode/${code}`, { method: 'GET' });
+        if (party && party.id) {
+          push(`/parties/${party.id}`);
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    [push],
+  );
 
   return (
     <div className="landing">
@@ -36,8 +55,18 @@ const Landing: FunctionComponent = () => {
             Krawumms lets your guests choose which music should be played using their smartphones.
           </Text>
           <Stack>
-            <Input variant="filled" placeholder="Party Code" />
-            <Button variantColor="green">Join Party</Button>
+            <Box display="flex" flexDirection="column">
+              <Form onSubmit={handleFormSubmit}>
+                {({ handleSubmit, submitting }) => (
+                  <Box display="flex" flexDirection="column" as="form" onSubmit={handleSubmit}>
+                    <InputControl variant="filled" placeholder="Party Code" required name="code" />
+                    <Button isLoading={submitting} loadingText="Submitting" variantColor="green" type="submit">
+                      Join Party
+                    </Button>
+                  </Box>
+                )}
+              </Form>
+            </Box>
             <Button onClick={onCreateClick}>Create Party</Button>
           </Stack>
         </Box>
