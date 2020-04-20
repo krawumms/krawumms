@@ -4933,6 +4933,11 @@ secure-json-parse@^2.1.0:
   resolved "https://registry.yarnpkg.com/secure-json-parse/-/secure-json-parse-2.1.0.tgz#ae76f5624256b5c497af887090a5d9e156c9fb20"
   integrity sha512-GckO+MS/wT4UogDyoI/H/S1L0MCcKS1XX/vp48wfmU7Nw4woBmb8mIpu4zPBQjKlRT88/bt9xdoV4111jPpNJA==
 
+secure-random-string@^1.1.3:
+  version "1.1.3"
+  resolved "https://registry.yarnpkg.com/secure-random-string/-/secure-random-string-1.1.3.tgz#8076279d3450cd52948b890849a95d38a25362e3"
+  integrity sha512-298HxkJJp5mjpPhxDsN26S/2JmMaUIrQ4PxDI/F4fXKRBTOKendQ5i6JCkc+a8F8koLh0vdfwSCw8+RJkY7N6A==
+
 semver-store@^0.3.0:
   version "0.3.0"
   resolved "https://registry.yarnpkg.com/semver-store/-/semver-store-0.3.0.tgz#ce602ff07df37080ec9f4fb40b29576547befbe9"

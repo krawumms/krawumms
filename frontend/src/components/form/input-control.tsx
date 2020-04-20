@@ -6,17 +6,35 @@ import Error from './error';
 
 type Props = {
   name: string;
-  label: string;
+  label?: string;
   required?: boolean;
+  variant?: 'outline' | 'unstyled' | 'flushed' | 'filled' | undefined;
+  placeholder?: string;
 };
 
-const InputControl: FunctionComponent<Props> = ({ name, label, required = false }) => {
+const InputControl: FunctionComponent<Props> = ({
+  placeholder,
+  name,
+  label,
+  variant,
+  required = false,
+  ...inputProps
+}) => {
   const { input, meta } = useField(name);
   return (
     <Control name={name} my={4}>
-      <FormLabel htmlFor={name}>{label}</FormLabel>
-      {/* eslint-disable-next-line react/jsx-props-no-spreading */}
-      <Input {...input} isRequired={required} isInvalid={meta.error && meta.touched} id={name} placeholder={label} />
+      {label && <FormLabel htmlFor={name}>{label}</FormLabel>}
+      <Input
+        // eslint-disable-next-line react/jsx-props-no-spreading
+        {...inputProps}
+        // eslint-disable-next-line react/jsx-props-no-spreading
+        {...input}
+        variant={variant}
+        isRequired={required}
+        isInvalid={meta.error && meta.touched}
+        id={name}
+        placeholder={label || placeholder}
+      />
       <Error name={name} />
     </Control>
   );
