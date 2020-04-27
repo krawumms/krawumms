@@ -56,6 +56,18 @@ const PartyComponent: FunctionComponent<Props> = ({ party }) => {
     [id],
   );
 
+  const onDeleteClick = useCallback(
+    async (trackId: string) => {
+      await mutate(`${config.apiBaseUrl}/parties/${id}/playlist`, async () => {
+        const result = await fetcher(`${config.apiBaseUrl}/parties/${id}/playlist`, {
+          method: 'DELETE',
+          body: JSON.stringify({ id: trackId }),
+        });
+        return result.playlist;
+      });
+    },
+    [id],
+  );
   return (
     <Box padding="16px" display="flex" flexDirection="column" alignItems="center">
       <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center">
@@ -124,6 +136,15 @@ const PartyComponent: FunctionComponent<Props> = ({ party }) => {
                     size="lg"
                     icon="arrow-down"
                     onClick={() => onDownVote(trackId)}
+                    padding="8px"
+                    margin="8px"
+                  />
+                  <IconButton
+                    variantColor="red"
+                    aria-label="Delete Song"
+                    size="lg"
+                    icon="delete"
+                    onClick={() => onDeleteClick(trackId)}
                     padding="8px"
                     margin="8px"
                   />
