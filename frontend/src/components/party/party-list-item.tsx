@@ -1,6 +1,16 @@
 import React, { FunctionComponent, useContext, useCallback } from 'react';
 
-import { Box, Editable, EditableInput, EditablePreview, Heading, IconButton, Stack, Text, PseudoBox } from '@chakra-ui/core';
+import {
+  Box,
+  Editable,
+  EditableInput,
+  EditablePreview,
+  Heading,
+  IconButton,
+  Stack,
+  Text,
+  PseudoBox,
+} from '@chakra-ui/core';
 import Link from 'next/link';
 
 import { mutate } from 'swr';
