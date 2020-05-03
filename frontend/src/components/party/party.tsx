@@ -6,6 +6,7 @@ import fetcher from '../../util/fetcher';
 import config from '../../config';
 import Search from './search';
 import PartyIcon from '../../icons/party.svg';
+import PartyPlayer from './party-player';
 
 type Props = {
   party: Party;
@@ -82,7 +83,9 @@ const PartyComponent: FunctionComponent<Props> = ({ party }) => {
           <Text>{updatedAt}</Text>
         </Stack>
       </Box>
-      <Search />
+      {Array.isArray(tracks) && Boolean(tracks.length) && (
+        <PartyPlayer track={tracks[0]} />
+      )}
       {Array.isArray(tracks) && Boolean(tracks.length) && (
         <Stack
           width={['100%', '75%', '50%']}
@@ -154,6 +157,7 @@ const PartyComponent: FunctionComponent<Props> = ({ party }) => {
           })}
         </Stack>
       )}
+      <Search />
     </Box>
   );
 };

@@ -33,6 +33,7 @@
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-final-form": "^6.4.0",
+    "react-icons": "^3.10.0",
     "spotify-web-api-node": "^4.0.0",
     "swr": "^0.2.0"
   },
