@@ -1,6 +1,16 @@
 import React, { FunctionComponent, useContext, useCallback } from 'react';
 
-import { Box, Editable, EditableInput, EditablePreview, Heading, IconButton, Stack, Text } from '@chakra-ui/core';
+import {
+  Box,
+  Editable,
+  EditableInput,
+  EditablePreview,
+  Heading,
+  IconButton,
+  Stack,
+  Text,
+  PseudoBox,
+} from '@chakra-ui/core';
 import Link from 'next/link';
 
 import { mutate } from 'swr';
@@ -40,12 +50,12 @@ const PartyListItem: FunctionComponent<Props> = ({ party, ...rest }) => {
   }, [id, partyState.name, partyState.topic]);
 
   return (
-    <Box
-      backgroundColor="#ffffff"
+    <PseudoBox
+      backgroundColor="#eee"
+      _hover={{ bg: '#ddd' }}
       padding="16px"
-      boxShadow="md"
       display="flex"
-      borderRadius="2px"
+      borderRadius="1em"
       alignItems="center"
       /* eslint-disable-next-line react/jsx-props-no-spreading */
       {...rest}
@@ -114,7 +124,7 @@ const PartyListItem: FunctionComponent<Props> = ({ party, ...rest }) => {
           <IconButton variantColor="green" aria-label="Delete Party" size="lg" icon="search" />
         </Box>
       </Link>
-    </Box>
+    </PseudoBox>
   );
 };
 
