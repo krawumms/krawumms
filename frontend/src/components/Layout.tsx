@@ -48,7 +48,7 @@ const Layout: React.FunctionComponent<Props> = ({ children, title = 'This is the
     </Box>
     <footer>
       <Box bg="#1bd363" w="100%" p={4} color="white" position="fixed" left="0" bottom="0" text-align="center">
-        <p>This is the Box</p>
+        <p>Created with love</p>
       </Box>
     </footer>
   </html>

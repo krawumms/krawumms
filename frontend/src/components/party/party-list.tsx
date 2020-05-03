@@ -16,6 +16,7 @@ const PartyList: FunctionComponent<Props> = ({ parties, ...props }) => (
     {!parties.length && (
       <Box
         background="#ffffff"
+        width="100%"
         padding="16px"
         boxShadow="md"
         borderRadius="2px"

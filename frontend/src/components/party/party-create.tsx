@@ -20,9 +20,9 @@ const PartyCreate: React.FunctionComponent = ({ ...props }) => {
       {({ handleSubmit, form, submitting, pristine }) => (
         <Box
           as="form"
+          width="100%"
           alignSelf="flex-start"
           padding="16px"
-          boxShadow="md"
           borderRadius="2px"
           flex="1"
           backgroundColor="#ffffff"
