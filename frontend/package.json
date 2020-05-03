@@ -23,7 +23,7 @@
     "emotion-server": "^10.0.27",
     "emotion-theming": "^10.0.27",
     "eslint-plugin-cypress": "^2.10.3",
-    "fastify": "^2.13.0",
+    "fastify": "^2.14.0",
     "fastify-cookie": "^3.6.0",
     "final-form": "^4.19.1",
     "http-status-codes": "^1.4.0",
