@@ -9,13 +9,19 @@ type Props = {
 };
 
 const Parties: FunctionComponent<Props> = ({ parties }) => (
-  <Box padding="16px">
-    <Heading as="h1" size="xl" marginBottom="16px">
+  <Box padding="16px" width="100%">
+    <Heading as="h1" size="xl" marginBottom="16px" textAlign="center">
       My Parties
     </Heading>
-    <Stack isInline spacing="8px" padding="8px" backgroundColor="#e5e5e5">
-      <PartyList parties={parties} />
+    <Stack spacing="8px" padding="8px" backgroundColor="none">
+      <Heading as="h4" size="lg">
+        Create a new party
+      </Heading>
       <PartyCreate />
+      <Heading as="h4" size="lg">
+        Ongoing parties
+      </Heading>
+      <PartyList parties={parties} />
     </Stack>
   </Box>
 );

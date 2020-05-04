@@ -1,6 +1,16 @@
 import React, { FunctionComponent, useContext, useCallback } from 'react';
 
-import { Box, Editable, EditableInput, EditablePreview, Heading, IconButton, Stack, Text } from '@chakra-ui/core';
+import {
+  Box,
+  Editable,
+  EditableInput,
+  EditablePreview,
+  Heading,
+  IconButton,
+  Stack,
+  Text,
+  PseudoBox,
+} from '@chakra-ui/core';
 import Link from 'next/link';
 
 import { mutate } from 'swr';
@@ -40,17 +50,25 @@ const PartyListItem: FunctionComponent<Props> = ({ party, ...rest }) => {
   }, [id, partyState.name, partyState.topic]);
 
   return (
-    <Box
-      backgroundColor="#ffffff"
+    <PseudoBox
+      backgroundColor="#eee"
+      _hover={{ bg: '#ddd' }}
       padding="16px"
-      boxShadow="md"
-      display="flex"
-      borderRadius="2px"
+      borderRadius="1em"
+      display={{ md: 'flex' }}
       alignItems="center"
       /* eslint-disable-next-line react/jsx-props-no-spreading */
       {...rest}
     >
-      <Box flex="1" padding="16px">
+      <Box
+        display="inline-block"
+        width={[
+          '80%', // base
+          '100%', // 480px upwards
+          '70%', // 768px upwards
+          '80%', // 992px upwards
+        ]}
+      >
         <Stack spacing="4px">
           <Heading fontSize="xl">
             <Editable
@@ -79,42 +97,52 @@ const PartyListItem: FunctionComponent<Props> = ({ party, ...rest }) => {
           <Text>{id}</Text>
         </Stack>
       </Box>
-      {partyId === id ? (
+      <Box
+        display="inline-block"
+        width={[
+          '20%', // base
+          '100%', // 480px upwards
+          '30%', // 768px upwards
+          '20%', // 992px upwards
+        ]}
+      >
+        {partyId === id ? (
+          <IconButton
+            variantColor="yellow"
+            aria-label="Select Party"
+            size="lg"
+            icon="star"
+            variant="solid"
+            padding="8px"
+            marginRight="8px"
+          />
+        ) : (
+          <IconButton
+            variantColor="yellow"
+            aria-label="Select Party"
+            size="lg"
+            icon="star"
+            variant="outline"
+            onClick={onSelectClick}
+            padding="8px"
+            marginRight="8px"
+          />
+        )}
         <IconButton
-          variantColor="yellow"
-          aria-label="Select Party"
+          variantColor="red"
+          aria-label="Delete Party"
           size="lg"
-          icon="star"
-          variant="solid"
+          icon="delete"
+          onClick={onDeleteClick}
           padding="8px"
-          marginRight="8px"
         />
-      ) : (
-        <IconButton
-          variantColor="yellow"
-          aria-label="Select Party"
-          size="lg"
-          icon="star"
-          variant="outline"
-          onClick={onSelectClick}
-          padding="8px"
-          marginRight="8px"
-        />
-      )}
-      <IconButton
-        variantColor="red"
-        aria-label="Delete Party"
-        size="lg"
-        icon="delete"
-        onClick={onDeleteClick}
-        padding="8px"
-      />
-      <Link href="/parties/[id]" as={`/parties/${id}`}>
-        <Box as="a" padding="8px">
-          <IconButton variantColor="green" aria-label="Delete Party" size="lg" icon="search" />
-        </Box>
-      </Link>
-    </Box>
+        <Link href="/parties/[id]" as={`/parties/${id}`}>
+          <Box as="a" padding="8px">
+            <IconButton variantColor="green" aria-label="Delete Party" size="lg" icon="search" />
+          </Box>
+        </Link>
+      </Box>
+    </PseudoBox>
   );
 };
 
