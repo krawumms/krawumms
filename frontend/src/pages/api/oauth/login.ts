@@ -2,7 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import HttpStatus from 'http-status-codes';
 import spotifyApi from '../../../util/spotify';
 
-const scopes = ['user-read-private', 'user-read-email'];
+const scopes = ['streaming', 'user-read-private', 'user-read-email'];
 
 export default (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === 'GET') {

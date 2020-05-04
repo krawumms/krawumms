@@ -12,6 +12,7 @@ export type Todo = {
 
 export type Track = {
   id: string;
+  uri: string;
   name: string;
   artists: Array<{
     name: string;

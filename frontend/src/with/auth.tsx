@@ -61,7 +61,7 @@ export default (Page: NextPage<any>) => {
 
       // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
       // @ts-ignore
-      return Page.getInitialProps ? Page.getInitialProps({ ...context, accessToken }) : {};
+      return Page.getInitialProps ? Page.getInitialProps({ ...context, accessToken }) : { accessToken };
     }
 
     render() {

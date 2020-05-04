@@ -1,8 +1,11 @@
-import React, { FunctionComponent, useCallback } from 'react';
+import React, { FunctionComponent, useContext, useEffect, useState } from 'react';
 
 import { MdPlayArrow, MdPause } from 'react-icons/md';
+import Script from 'react-load-script';
 import { Box, Heading, Text, Image, IconButton } from '@chakra-ui/core';
 import { Track } from '../../interfaces';
+import { AuthContext } from '../../contexts/AuthContext';
+import SpotifyWebPlayer from '../../util/spotify-web-player';
 
 type Props = {
   track: Track;
@@ -11,15 +14,27 @@ type Props = {
 const PartyPlayer: FunctionComponent<Props> = ({ track }) => {
   const { url } = track.album.images.find(({ height }) => height === 300) || {};
 
-  const onPlay = useCallback((trackId) => {
-    // TODO: play song
-    console.log(trackId);
-  }, []);
+  const { accessToken } = useContext(AuthContext);
+  const [webPlayer, setWebPlayer] = useState<SpotifyWebPlayer>();
 
-  const onPause = useCallback((trackId) => {
-    // TODO: pause song
-    console.log(trackId);
-  }, []);
+  const handleScriptLoad = () => {
+    return new Promise((resolve) => {
+      if (window.Spotify) {
+        resolve();
+      } else {
+        window.onSpotifyWebPlaybackSDKReady = resolve;
+      }
+    });
+  };
+
+  useEffect(() => {
+    window.onSpotifyWebPlaybackSDKReady = () => {
+      console.log('Player Ready :D');
+      console.log('Accesstoken: ', accessToken);
+      const player = new SpotifyWebPlayer(accessToken);
+      setWebPlayer(player);
+    };
+  });
 
   return (
     <Box
@@ -32,11 +47,12 @@ const PartyPlayer: FunctionComponent<Props> = ({ track }) => {
       backgroundColor="#EDF2F7"
       marginBottom="24px"
     >
+      <Script url="https://sdk.scdn.co/spotify-player.js" onLoad={handleScriptLoad} />
       <Heading fontSize="18px">Currently Playing:</Heading>
 
       <Image
         fallbackSrc="https://via.placeholder.com/64"
-        src={ url }
+        src={url}
         alt={`Album cover: ${track.album}`}
         margin="16px auto"
       />
@@ -49,7 +65,7 @@ const PartyPlayer: FunctionComponent<Props> = ({ track }) => {
           size="lg"
           isRound
           icon={MdPlayArrow}
-          onClick={() => onPlay(track.id)}
+          onClick={() => webPlayer?.play(track)}
           padding="8px"
           margin="8px"
         />
@@ -59,7 +75,7 @@ const PartyPlayer: FunctionComponent<Props> = ({ track }) => {
           size="lg"
           isRound
           icon={MdPause}
-          onClick={() => onPause(track.id)}
+          onClick={() => console.log(track)}
           padding="8px"
           margin="8px"
         />
