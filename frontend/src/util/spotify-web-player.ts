@@ -1,5 +1,5 @@
+import fetcher from 'isomorphic-unfetch';
 import { Track } from '../interfaces';
-import fetcher from './fetcher';
 
 class SpotifyWebPlayer {
   public player: Spotify.SpotifyPlayer;

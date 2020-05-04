@@ -31,10 +31,12 @@ const PartyPlayer: FunctionComponent<Props> = ({ track }) => {
     window.onSpotifyWebPlaybackSDKReady = () => {
       console.log('Player Ready :D');
       console.log('Accesstoken: ', accessToken);
-      const player = new SpotifyWebPlayer(accessToken);
+      // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+      // @ts-ignore
+      const player = new SpotifyWebPlayer(accessToken.access_token || '');
       setWebPlayer(player);
     };
-  });
+  }, [accessToken]);
 
   return (
     <Box
