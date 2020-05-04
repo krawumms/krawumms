@@ -5,7 +5,7 @@ export default async function (input: RequestInfo, init?: RequestInit) {
     ...init,
     headers: {
       'Content-Type': 'application/json',
-      ...init?.headers,
+      ...(init ? init.headers : {}),
     },
   });
   return res.json();
