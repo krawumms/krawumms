@@ -1,4 +1,5 @@
-import React, { FunctionComponent, useCallback } from 'react';
+import React, { FunctionComponent, useCallback, useContext } from 'react';
+import { v4 as uuidv4 } from 'uuid';
 import { Box, Heading, IconButton, Image, Stack, Text } from '@chakra-ui/core';
 import useSWR, { mutate } from 'swr';
 import { Party, Track } from '../../interfaces';
@@ -6,6 +7,8 @@ import fetcher from '../../util/fetcher';
 import config from '../../config';
 import Search from './search';
 import PartyIcon from '../../icons/party.svg';
+import useLocalStorage from '../../hooks/use-localstorage';
+import { AuthContext } from '../../contexts/AuthContext';
 
 type Props = {
   party: Party;
@@ -13,17 +16,23 @@ type Props = {
 
 type PlaylistTrack = {
   id: string;
-  votes: number;
+  votes: [string];
 };
 
 const PartyComponent: FunctionComponent<Props> = ({ party }) => {
-  const { id, name, topic, createdAt, updatedAt, code } = party;
+  const { id, name, topic, createdAt, updatedAt, code, ownerId } = party;
+  const { user } = useContext(AuthContext);
   const { data: playlist } = useSWR<PlaylistTrack[]>(`${config.apiBaseUrl}/parties/${id}/playlist`, fetcher, {
     refreshInterval: 1000,
   });
+  const isOwner = user && user.id === ownerId;
+  const [clientUuid, setClientUuid] = useLocalStorage('clientUuid');
+  if (!clientUuid) {
+    setClientUuid(uuidv4());
+  }
 
   if (playlist && playlist.length) {
-    playlist.sort((a, b) => b.votes - a.votes);
+    playlist.sort((a, b) => b.votes.length - a.votes.length);
   }
   const trackIds = playlist && playlist.map((track) => track.id);
   // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
@@ -36,11 +45,14 @@ const PartyComponent: FunctionComponent<Props> = ({ party }) => {
         const result = await fetcher(`${config.apiBaseUrl}/parties/${id}/playlist/${trackId}/down-vote`, {
           method: 'PUT',
           body: JSON.stringify({}),
+          headers: {
+            'x-krawumms-client': clientUuid,
+          },
         });
         return result.playlist;
       });
     },
-    [id],
+    [id, clientUuid],
   );
 
   const onUpVote = useCallback(
@@ -49,11 +61,14 @@ const PartyComponent: FunctionComponent<Props> = ({ party }) => {
         const result = await fetcher(`${config.apiBaseUrl}/parties/${id}/playlist/${trackId}/up-vote`, {
           method: 'PUT',
           body: JSON.stringify({}),
+          headers: {
+            'x-krawumms-client': clientUuid,
+          },
         });
         return result.playlist;
       });
     },
-    [id],
+    [id, clientUuid],
   );
 
   const onDeleteClick = useCallback(
@@ -94,6 +109,7 @@ const PartyComponent: FunctionComponent<Props> = ({ party }) => {
           {tracks.map(({ name: trackName, id: trackId, artists, album: { images } }) => {
             const { url } = images.find(({ height }) => height === 64) || {};
             const playlistTrack = playlist && playlist.find((pT) => pT.id === trackId);
+            const hasAlreadyVoted = playlistTrack && playlistTrack.votes.includes(clientUuid);
             return (
               <Box
                 key={trackId}
@@ -117,37 +133,37 @@ const PartyComponent: FunctionComponent<Props> = ({ party }) => {
 
                   {/* to remove, only for dev/debug */}
                   <Text>{trackId}</Text>
-                  {playlistTrack && <Text> Votes: {playlistTrack.votes} </Text>}
+                  {playlistTrack && <Text> Votes: {playlistTrack.votes.length} </Text>}
                   <Text>{artists.map((artist) => artist.name).join(', ')}</Text>
                 </Box>
                 <Box>
                   <IconButton
-                    variantColor="green"
-                    aria-label="Up-vote Track"
+                    variantColor="yellow"
+                    aria-label="Select Party"
                     size="lg"
-                    icon="arrow-up"
-                    onClick={() => onUpVote(trackId)}
+                    icon="star"
+                    variant={hasAlreadyVoted ? 'solid' : 'outline'}
                     padding="8px"
-                    margin="8px"
+                    marginRight="8px"
+                    onClick={() => {
+                      if (hasAlreadyVoted) {
+                        onDownVote(trackId);
+                      } else {
+                        onUpVote(trackId);
+                      }
+                    }}
                   />
-                  <IconButton
-                    variantColor="red"
-                    aria-label="Down-vote Track"
-                    size="lg"
-                    icon="arrow-down"
-                    onClick={() => onDownVote(trackId)}
-                    padding="8px"
-                    margin="8px"
-                  />
-                  <IconButton
-                    variantColor="red"
-                    aria-label="Delete Song"
-                    size="lg"
-                    icon="delete"
-                    onClick={() => onDeleteClick(trackId)}
-                    padding="8px"
-                    margin="8px"
-                  />
+                  {isOwner && (
+                    <IconButton
+                      variantColor="red"
+                      aria-label="Delete Song"
+                      size="lg"
+                      icon="delete"
+                      onClick={() => onDeleteClick(trackId)}
+                      padding="8px"
+                      margin="8px"
+                    />
+                  )}
                 </Box>
               </Box>
             );

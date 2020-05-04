@@ -4,7 +4,7 @@ import mongooseTimestamp from 'mongoose-timestamp';
 
 export interface Track {
   id: string;
-  votes: number;
+  votes: [string];
 }
 
 export interface PartyDocument extends Document {
@@ -13,6 +13,7 @@ export interface PartyDocument extends Document {
   topic: string;
   owner: string;
   code: string;
+  ownerId: string;
   playlist: Array<Track>;
 }
 
@@ -20,7 +21,7 @@ export type PartyModel = PartyDocument;
 
 export const TrackSchema: Schema = new Schema({
   id: String,
-  votes: Number,
+  votes: [String],
 });
 
 export const PartySchema: Schema = new Schema(
@@ -31,6 +32,7 @@ export const PartySchema: Schema = new Schema(
     owner: String,
     playlist: [TrackSchema],
     code: String,
+    ownerId: String,
   },
   { collection: 'party' },
 );

@@ -30,6 +30,7 @@ export type Party = {
   name: string;
   topic: string;
   code: string;
+  ownerId: string;
   createdAt: Date;
   updatedAt: Date;
 };
