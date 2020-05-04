@@ -38,6 +38,11 @@ const Layout: React.FunctionComponent<Props> = ({ children, title = 'This is the
                   Party List
                 </MenuItem>
               </Link>
+              <Link href="/player">
+                <MenuItem _hover={{ color: 'black' }} _focus={{ bg: 'none' }}>
+                  Party Player
+                </MenuItem>
+              </Link>
             </MenuGroup>
           </MenuList>
         </Menu>
