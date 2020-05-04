@@ -28,19 +28,20 @@ export const AddUserSchema = {
 };
 
 export default fastifyPlugin(async (server, opts, next) => {
-  server.get('/me', { schema: AddUserSchema }, async (request, reply) => {
-    try {
-      const { body } = request;
-      const user = await User.create({
-        id: uuid(),
-        ...body,
-      });
-      return reply.code(HttpStatus.CREATED).send(user);
-    } catch (error) {
-      request.log.error(error);
-      return reply.send(HttpStatus.INTERNAL_SERVER_ERROR);
-    }
-  });
+  server.get(
+    '/me',
+    {
+      preHandler: [server.auth],
+    },
+    async (request, reply) => {
+      try {
+        return reply.code(HttpStatus.OK).send(request.user);
+      } catch (error) {
+        request.log.error(error);
+        return reply.send(HttpStatus.INTERNAL_SERVER_ERROR);
+      }
+    },
+  );
 
   server.post('/user', { schema: AddUserSchema }, async (request, reply) => {
     try {

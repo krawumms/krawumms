@@ -4,6 +4,7 @@ import * as http from 'http';
 import { NextPage } from 'next';
 import cookie from 'cookie';
 import config from '../config';
+import fetcher from '../util/fetcher';
 
 export async function triggerAuthCodeGrant(res: http.ServerResponse | undefined, asPath: string) {
   // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
@@ -24,7 +25,7 @@ export async function triggerAuthCodeGrant(res: http.ServerResponse | undefined,
   }
 }
 
-export default (Page: NextPage<any>) => {
+export default (Page: NextPage<any>, triggerAuthCode = true) => {
   return class PageWithAuth extends Component<any> {
     static async getInitialProps(context: {
       route: string;
@@ -54,14 +55,26 @@ export default (Page: NextPage<any>) => {
         req.accessToken = accessToken;
       }
 
-      if (!accessToken || Object.keys(accessToken).length === 0) {
+      const hasNoAccessToken = !accessToken || Object.keys(accessToken).length === 0;
+
+      if (triggerAuthCode && hasNoAccessToken) {
         await triggerAuthCodeGrant(res, context.asPath);
         return {};
       }
 
+      let user = null;
+
+      if (!hasNoAccessToken) {
+        user = await fetcher(`${config.apiBaseUrl}/me`, {
+          headers: {
+            Authorization: `${accessToken.token_type} ${accessToken.access_token}`,
+          },
+        });
+      }
+
       // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
       // @ts-ignore
-      return Page.getInitialProps ? Page.getInitialProps({ ...context, accessToken }) : { accessToken };
+      return Page.getInitialProps ? Page.getInitialProps({ ...context, accessToken, user }) : { accessToken, user };
     }
 
     render() {
