@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { NextPage } from 'next';
 import useSWR from 'swr';
 import { Spinner } from '@chakra-ui/core';
@@ -8,11 +8,15 @@ import fetcher from '../../util/fetcher';
 import config from '../../config';
 import Parties from '../../components/party/parties';
 import withAuth from '../../with/auth';
+import { AuthContext } from '../../contexts/AuthContext';
 
 type Props = {};
 
 const PartiesPage: NextPage<Props> = () => {
-  const { data, error } = useSWR(`${config.apiBaseUrl}/parties`, fetcher);
+  const { accessToken } = useContext(AuthContext);
+  const { data, error } = useSWR(`${config.apiBaseUrl}/parties`, (url) =>
+    fetcher(url, { headers: { Authorization: `${accessToken.token_type} ${accessToken.access_token}` } }),
+  );
 
   return (
     <Layout title="Party List | Krawumms">

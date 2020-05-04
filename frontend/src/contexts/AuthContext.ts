@@ -1,11 +1,23 @@
 import { createContext } from 'react';
 
 export type AuthContext = {
-  accessToken: string;
+  accessToken: {
+    token_type: string | undefined;
+    access_token: string | undefined;
+  };
+  user: {
+    id: string | undefined;
+  };
 };
 
 export const AUTH_DEFAULT_VALUE = {
-  accessToken: '',
+  accessToken: {
+    token_type: undefined,
+    access_token: undefined,
+  },
+  user: {
+    id: undefined,
+  },
 };
 
 export const AuthContext = createContext<AuthContext>(AUTH_DEFAULT_VALUE);

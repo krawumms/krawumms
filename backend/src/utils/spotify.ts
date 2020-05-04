@@ -13,8 +13,7 @@ const createSpotifyApi = async () => {
   return spotifyApi;
 };
 
-// eslint-disable-next-line
-const createUserSpotifyApi = async (accessToken: string) => {
+export const createUserSpotifyApi = async (accessToken: string) => {
   spotifyApi.setAccessToken(accessToken);
   return spotifyApi;
 };

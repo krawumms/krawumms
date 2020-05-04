@@ -7,6 +7,7 @@ import { Spinner } from '@chakra-ui/core/dist';
 import { Party } from '../../interfaces';
 import fetcher from '../../util/fetcher';
 import config from '../../config';
+import withAuth from '../../with/auth';
 import Layout from '../../components/Layout';
 import PartyComponent from '../../components/party/party';
 import { PartyContext } from '../../contexts/PartyContext';
@@ -39,4 +40,4 @@ const PartyPage: NextPage<Props> = () => {
   );
 };
 
-export default PartyPage;
+export default withAuth(PartyPage, false);

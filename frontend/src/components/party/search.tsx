@@ -1,10 +1,12 @@
 import React, { FunctionComponent, useCallback, useContext, useEffect, useState } from 'react';
+import { v4 as uuidv4 } from 'uuid';
 import queryString from 'querystring';
 import { Box, Button, Heading, Icon, IconButton, Image, Input, Spinner, Stack, Text } from '@chakra-ui/core';
 import fetcher from '../../util/fetcher';
 import { Track } from '../../interfaces';
 import config from '../../config';
 import { PartyContext } from '../../contexts/PartyContext';
+import useLocalStorage from '../../hooks/use-localstorage';
 
 type Props = {};
 
@@ -17,6 +19,11 @@ const Search: FunctionComponent<Props> = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const { partyId } = useContext(PartyContext);
   const [playlist, setPlaylist] = useState<string[]>([]);
+
+  const [clientUuid, setClientUuid] = useLocalStorage('clientUuid');
+  if (!clientUuid) {
+    setClientUuid(uuidv4());
+  }
 
   useEffect(() => {
     const fetchPlaylist = async () => {
@@ -64,9 +71,12 @@ const Search: FunctionComponent<Props> = () => {
       await fetcher(`${config.apiBaseUrl}/parties/${partyId}/playlist`, {
         method: 'PUT',
         body: JSON.stringify({ id: trackId }),
+        headers: {
+          'x-krawumms-client': clientUuid,
+        },
       });
     },
-    [partyId, playlist, setPlaylist],
+    [partyId, playlist, setPlaylist, clientUuid],
   );
 
   const onRemoveClick = useCallback(

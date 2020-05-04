@@ -14,14 +14,14 @@ import { PartyProvider } from '../contexts/PartyContext';
 import useParty from '../hooks/useParty';
 
 const App = ({ Component, pageProps }: AppProps) => {
-  const { accessToken, ...actualPageProps } = pageProps;
+  const { accessToken, user, ...actualPageProps } = pageProps;
   const party = useParty();
 
   return (
     <CacheProvider value={cache}>
       <ThemeProvider>
         <CSSReset />
-        <AuthProvider value={{ accessToken }}>
+        <AuthProvider value={{ accessToken, user }}>
           <PartyProvider value={party}>
             {/* eslint-disable-next-line react/jsx-props-no-spreading */}
             <Component {...actualPageProps} />
