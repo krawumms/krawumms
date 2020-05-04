@@ -77,7 +77,7 @@ const PartyPlayer: FunctionComponent<Props> = ({ track }) => {
           size="lg"
           isRound
           icon={MdPause}
-          onClick={() => console.log(track)}
+          onClick={() => webPlayer?.player.togglePlay()}
           padding="8px"
           margin="8px"
         />
