@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Link from 'next/link';
 import Head from 'next/head';
-import { Menu, MenuButton, MenuList, MenuItem, MenuGroup, Button, Box, IconButton } from '@chakra-ui/core';
+import { Menu, MenuButton, MenuList, MenuItem, MenuGroup, Button, Box, IconButton, Image } from '@chakra-ui/core';
 
 type Props = {
   title?: string;
@@ -46,11 +46,22 @@ const Layout: React.FunctionComponent<Props> = ({ children, title = 'This is the
         </MenuList>
       </Menu>
     </Box>
-    <Box p="1em" pb="3em">
+    <Box p="1em" pb="3em" bg="none">
       {children}
     </Box>
-    <Box bg="#1bd363" w="100%" p={4} color="white" position="fixed" left="0" bottom="0" text-align="center">
-      <p>Created with love</p>
+    <Box
+      bg="#1bd363"
+      h="4em"
+      w="100%"
+      p={4}
+      color="white"
+      position="fixed"
+      left="0"
+      bottom="0"
+      text-align="center"
+      padding="0.5em"
+    >
+      <Image src="/footer-logo.png" h="3em" margin="auto" />
     </Box>
   </Box>
 );
