@@ -17,13 +17,15 @@ const PartyPlayer: FunctionComponent<Props> = ({ track }) => {
   const { accessToken } = useContext(AuthContext);
   const [webPlayer, setWebPlayer] = useState<SpotifyWebPlayer>();
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
+  const [isPaused, setIsPaused] = useState<boolean>(true);
 
   const handlePlayback = () => {
     if (isPlaying) {
-      setIsPlaying(!isPlaying);
+      setIsPaused(!isPaused);
       return webPlayer?.player.togglePlay();
     } else {
       setIsPlaying(true);
+      setIsPaused(false);
       return webPlayer?.play(track);
     }
   };
@@ -75,7 +77,7 @@ const PartyPlayer: FunctionComponent<Props> = ({ track }) => {
           aria-label="Pause Track"
           size="lg"
           isRound
-          icon={isPlaying ? MdPause : MdPlayArrow}
+          icon={isPaused ? MdPlayArrow : MdPause}
           onClick={() => handlePlayback()}
           padding="8px"
           margin="8px"
