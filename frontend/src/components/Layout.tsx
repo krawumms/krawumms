@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Link from 'next/link';
 import Head from 'next/head';
-import { Menu, MenuButton, MenuList, MenuItem, MenuGroup, Button, Box, IconButton, Image } from '@chakra-ui/core';
+import { Menu, MenuButton, MenuList, MenuItem, MenuGroup, Button, Box, Icon, Image } from '@chakra-ui/core';
 
 type Props = {
   title?: string;
@@ -17,13 +17,7 @@ const Layout: React.FunctionComponent<Props> = ({ children, title = 'This is the
     <Box bg="#1bd363" w="100%" color="white" left="0" top="0" text-align="center">
       <Menu closeOnSelect>
         <MenuButton as={Button} bg="none" _hover={{ bg: 'none' }} _focus={{ shadow: 'none' }}>
-          <IconButton
-            aria-label="Menu"
-            icon="triangle-down"
-            bg="none"
-            _hover={{ bg: 'none' }}
-            _focus={{ shadow: 'none' }}
-          />
+          <Icon name="triangle-down" aria-label="Menu" bg="none" />
         </MenuButton>
         <MenuList bg="#1bd363">
           <MenuGroup>

@@ -82,18 +82,16 @@ const PartyListItem: FunctionComponent<Props> = ({ party, ...rest }) => {
               <EditablePreview />
             </Editable>
           </Heading>
-          <Text>
-            <Editable
-              defaultValue={topic}
-              onChange={(e) => {
-                partyState.topic = e.toString();
-              }}
-              onSubmit={handleChangeSubmit}
-            >
-              <EditableInput />
-              <EditablePreview />
-            </Editable>
-          </Text>
+          <Editable
+            defaultValue={topic}
+            onChange={(e) => {
+              partyState.topic = e.toString();
+            }}
+            onSubmit={handleChangeSubmit}
+          >
+            <EditableInput />
+            <EditablePreview />
+          </Editable>
           <Text>{id}</Text>
         </Stack>
       </Box>
