@@ -16,6 +16,17 @@ const PartyPlayer: FunctionComponent<Props> = ({ track }) => {
 
   const { accessToken } = useContext(AuthContext);
   const [webPlayer, setWebPlayer] = useState<SpotifyWebPlayer>();
+  const [isPlaying, setIsPlaying] = useState<boolean>(false);
+
+  const handlePlayback = () => {
+    if (isPlaying) {
+      setIsPlaying(!isPlaying);
+      return webPlayer?.player.togglePlay();
+    } else {
+      setIsPlaying(true);
+      return webPlayer?.play(track);
+    }
+  };
 
   const handleScriptLoad = () => {
     return new Promise((resolve) => {
@@ -29,8 +40,6 @@ const PartyPlayer: FunctionComponent<Props> = ({ track }) => {
 
   useEffect(() => {
     window.onSpotifyWebPlaybackSDKReady = () => {
-      console.log('Player Ready :D');
-      console.log('Accesstoken: ', accessToken);
       // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
       // @ts-ignore
       const player = new SpotifyWebPlayer(accessToken.access_token || '');
@@ -63,21 +72,11 @@ const PartyPlayer: FunctionComponent<Props> = ({ track }) => {
       <Box>
         <IconButton
           variantColor="blue"
-          aria-label="Play Track"
-          size="lg"
-          isRound
-          icon={MdPlayArrow}
-          onClick={() => webPlayer?.play(track)}
-          padding="8px"
-          margin="8px"
-        />
-        <IconButton
-          variantColor="blue"
           aria-label="Pause Track"
           size="lg"
           isRound
-          icon={MdPause}
-          onClick={() => webPlayer?.player.togglePlay()}
+          icon={isPlaying ? MdPause : MdPlayArrow}
+          onClick={() => handlePlayback()}
           padding="8px"
           margin="8px"
         />
