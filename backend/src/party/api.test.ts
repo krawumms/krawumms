@@ -1,14 +1,32 @@
 import request from 'supertest';
 import mongoose from 'mongoose';
 import { OK, CREATED, NOT_FOUND } from 'http-status-codes';
-
+import SpotifyWebApi from 'spotify-web-api-node';
 import server from '../server';
+import config from '../config';
 
-const bearer =
-  'Bearer BQC4lQOBT-eQ9ZnECslf5lBGL-7S8P4xDdea03IURwueBRm2cUfxObyFbWNC0y0Ffqzh7qsrHiNhOcZ_Za8BaMnOfHfUP40I4O6gfsaJoc8kIAMc2S9bFNDLg_7jgqubmrL7yD5SAWT0Fx7ZzsQLIGDeW5YY5o6NuGsbww';
-
+const spotifyApi = new SpotifyWebApi({
+  clientId: config.spotify.clientId,
+  clientSecret: config.spotify.clientSecret,
+  redirectUri: config.spotify.redirectUri,
+});
+let bearer = '';
 describe('Test party api', () => {
   beforeAll(async () => {
+    spotifyApi.setRefreshToken(
+      'AQCPlJAhNnwZojV3y5VXuPAZ9PkVtqN8pP5DHpZwACVLtppMDsHUQLdh00YSfmUQcXf04hv3584Zx1zZfa4O6piVotbktwFQn_39N7Usz7X6wnnChv3tuQqLuWiw2STgJw8',
+    );
+    spotifyApi.refreshAccessToken().then(
+      function (data) {
+        console.log('The access token has been refreshed!');
+
+        // Save the access token so that it's used in future calls
+        bearer = `Bearer ${data.body.access_token}`;
+      },
+      function (err) {
+        console.log('Could not refresh access token', err);
+      },
+    );
     await mongoose.connect(process.env.MONGO_URL, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
@@ -17,6 +35,8 @@ describe('Test party api', () => {
   });
 
   beforeEach(async () => {
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    mongoose.connection.db.dropCollection('party', function () {});
     await request(server.server).post('/parties').set('Authorization', bearer).send({
       id: '1',
       name: 'first test party',
@@ -51,20 +71,11 @@ describe('Test party api', () => {
     expect(response.body.id).toBe('3');
   });
 
-  it('Should create new Party', async () => {
-    const response = await request(server.server).post('/parties').set('Authorization', bearer).send({
-      id: '3',
-      name: 'third test party',
-    });
-    expect(response.status).toEqual(CREATED);
-    expect(response.body.id).toBe('3');
-  });
-
   it('Should return all Parties', async () => {
     const response = await request(server.server).get('/parties').set('Authorization', bearer).send();
     expect(response.status).toEqual(OK);
-    expect(response.body[0].id).toBe('1');
-    expect(response.body[1].id).toBe('2');
+    console.log(response.body);
+    expect(response.body.length).toBe(3);
   });
 
   it('Should return a party by code', async () => {
@@ -101,7 +112,7 @@ describe('Test party api', () => {
   });
 
   it('Should get songs from playlist', async () => {
-    const response = await request(server.server).get('/parties/2/playlist');
+    const response = await request(server.server).get('/parties/4/playlist');
     expect(response.status).toEqual(OK);
     expect(response.body.length).toEqual(1);
   });
