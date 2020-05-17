@@ -43,6 +43,8 @@ class SpotifyWebPlayer {
         state.paused
       ) {
         console.log('Track ended');
+
+        // Eventemitter emit trackended?
         this.trackEnded = true;
       }
       this.state = state;

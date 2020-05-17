@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useContext, useEffect, useState } from 'react';
+import React, { FunctionComponent, useContext, useEffect, useRef, useState } from 'react';
 
 import { MdPlayArrow, MdPause } from 'react-icons/md';
 import Script from 'react-load-script';
@@ -19,7 +19,7 @@ type Props = {
 
 const PartyPlayer: FunctionComponent<Props> = ({ tracks, playlist }) => {
   const { accessToken } = useContext(AuthContext);
-  const [webPlayer, setWebPlayer] = useState<SpotifyWebPlayer>();
+  const webPlayer = useRef<SpotifyWebPlayer>();
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const [isPaused, setIsPaused] = useState<boolean>(true);
   const [activeTrack, setActiveTrack] = useState<Track>();
@@ -27,14 +27,16 @@ const PartyPlayer: FunctionComponent<Props> = ({ tracks, playlist }) => {
   // album cover url of first song in tracks
   const { url } = activeTrack?.album.images.find(({ height }) => height === 300) || {};
 
+  // eventemitter on trackended?
+
   const handlePlayback = () => {
     if (isPlaying) {
       setIsPaused(!isPaused);
-      return webPlayer?.player.togglePlay();
+      return webPlayer.current?.player.togglePlay();
     }
     setIsPlaying(true);
     setIsPaused(false);
-    return activeTrack ? webPlayer?.play(activeTrack) : null;
+    return activeTrack ? webPlayer.current?.play(activeTrack) : null;
   };
 
   const handleScriptLoad = () => {
@@ -52,9 +54,9 @@ const PartyPlayer: FunctionComponent<Props> = ({ tracks, playlist }) => {
       // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
       // @ts-ignore
       const player = new SpotifyWebPlayer(accessToken.access_token || '');
-      setWebPlayer(player);
+      webPlayer.current = player;
     };
-  }, [accessToken]);
+  }, [accessToken, webPlayer]);
 
   useEffect(() => {
     setActiveTrack(tracks.shift());
