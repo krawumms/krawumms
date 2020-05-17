@@ -12,7 +12,7 @@ import withAuth from '../with/auth';
 
 type PlaylistTrack = {
   id: string;
-  votes: number;
+  votes: Array<string>;
 };
 
 const PlayerPage: NextPage = () => {
@@ -23,7 +23,7 @@ const PlayerPage: NextPage = () => {
   });
 
   if (playlist && playlist.length) {
-    playlist.sort((a, b) => b.votes - a.votes);
+    playlist.sort((a, b) => b.votes.length - a.votes.length);
   }
   const trackIds = playlist && playlist.map((track) => track.id);
   // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
@@ -46,13 +46,7 @@ const PlayerPage: NextPage = () => {
         {Array.isArray(tracks) && Boolean(tracks.length) && (
           <div>
             <PartyPlayer track={tracks[0]} />
-            <Stack
-              width={['100%', '75%', '50%']}
-              backgroundColor="#EDF2F7"
-              maxHeight="500px"
-              overflowY="auto"
-              padding="8px"
-            >
+            <Stack backgroundColor="#EDF2F7" maxHeight="500px" overflowY="auto" padding="8px">
               {tracks.map(({ name: trackName, id: trackId, artists, album: { images } }) => {
                 const { url } = images.find(({ height }) => height === 64) || {};
                 const playlistTrack = playlist && playlist.find((pT) => pT.id === trackId);
@@ -76,10 +70,7 @@ const PlayerPage: NextPage = () => {
                       <Heading as="h2" size="md">
                         {trackName}
                       </Heading>
-
-                      {/* to remove, only for dev/debug */}
-                      <Text>{trackId}</Text>
-                      {playlistTrack && <Text> Votes: {playlistTrack.votes} </Text>}
+                      {playlistTrack && <Text> Votes: {playlistTrack.votes.length} </Text>}
                       <Text>{artists.map((artist) => artist.name).join(', ')}</Text>
                     </Box>
                   </Box>
