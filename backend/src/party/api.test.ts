@@ -65,7 +65,6 @@ describe('Test party api', () => {
     expect(response.status).toEqual(OK);
     expect(response.body[0].id).toBe('1');
     expect(response.body[1].id).toBe('2');
-    console.log(response.body);
   });
 
   it('Should return a party by code', async () => {
@@ -77,6 +76,7 @@ describe('Test party api', () => {
 
   it('Should return NOT_FOUND for invalid Code', async () => {
     const response = await request(server.server).get(`/parties/byCode/dfasdas123gd`).send();
+    expect(response.status).toEqual(OK);
     expect(response.body).toEqual(NOT_FOUND);
   });
 
@@ -102,9 +102,8 @@ describe('Test party api', () => {
 
   it('Should get songs from playlist', async () => {
     const response = await request(server.server).get('/parties/2/playlist');
-    console.log(response.body);
-    expect(response.body.length).toEqual(1);
     expect(response.status).toEqual(OK);
+    expect(response.body.length).toEqual(1);
   });
 
   it('Should delete song from playlist', async () => {
@@ -112,7 +111,7 @@ describe('Test party api', () => {
       .delete('/parties/1/playlist')
       .send({
         body: {
-          id: 'Test',
+          id: 'song1',
         },
       });
     expect(response.status).toEqual(OK);
@@ -134,8 +133,8 @@ describe('Test party api', () => {
           trackId: 'song1',
         },
       });
-    expect(response.body.playlist[0].votes).toEqual(['1234', '123456']);
     expect(response.status).toEqual(OK);
+    expect(response.body.playlist[0].votes).toEqual(['1234', '123456']);
   });
 
   it('Should make an downvote on a track', async () => {
@@ -148,7 +147,7 @@ describe('Test party api', () => {
           trackId: 'song4',
         },
       });
-    expect(response.body.playlist[0].votes).toEqual([]);
     expect(response.status).toEqual(OK);
+    expect(response.body.playlist[0].votes).toEqual([]);
   });
 });

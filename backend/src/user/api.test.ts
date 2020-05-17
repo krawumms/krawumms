@@ -1,6 +1,6 @@
 import request from 'supertest';
 import mongoose from 'mongoose';
-import {CREATED, NOT_FOUND, OK} from 'http-status-codes';
+import { CREATED, NOT_FOUND, OK } from 'http-status-codes';
 
 import server from '../server';
 
@@ -61,6 +61,7 @@ describe('Test User api', () => {
 
   it('Should return user NOT_FOUND', async () => {
     const response = await request(server.server).get('/user/999999');
+    expect(response.status).toEqual(OK);
     expect(response.body).toEqual(NOT_FOUND);
   });
 
@@ -71,7 +72,7 @@ describe('Test User api', () => {
 
   it('Should not find user to delete', async () => {
     const response = await request(server.server).delete('/user/30');
-    expect(response.body).toEqual(NOT_FOUND);
     expect(response.status).toEqual(OK);
+    expect(response.body).toEqual(NOT_FOUND);
   });
 });
