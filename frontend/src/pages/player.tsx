@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { NextPage } from 'next';
-import { Box, Heading, Image, Stack, Text } from '@chakra-ui/core';
+import { Box, Heading } from '@chakra-ui/core';
 import useSWR from 'swr';
 import { PartyContext } from '../contexts/PartyContext';
 import config from '../config';
@@ -33,52 +33,16 @@ const PlayerPage: NextPage = () => {
   return (
     <Layout title="Player | Krawumms">
       <Box
-        padding="16px"
         display="flex"
         width="100%"
         flexDirection="column"
         alignItems="center"
         justifyContent="center"
-        backgroundColor="#EDF2F7"
+        backgroundColor="#FFFFFF"
         marginBottom="24px"
       >
-        <Heading>Krawumms Player</Heading>
-        {Array.isArray(tracks) && Boolean(tracks.length) && (
-          <div>
-            <PartyPlayer track={tracks[0]} />
-            <Stack backgroundColor="#EDF2F7" maxHeight="500px" overflowY="auto" padding="8px">
-              {tracks.map(({ name: trackName, id: trackId, artists, album: { images } }) => {
-                const { url } = images.find(({ height }) => height === 64) || {};
-                const playlistTrack = playlist && playlist.find((pT) => pT.id === trackId);
-                return (
-                  <Box
-                    key={trackId}
-                    backgroundColor="#ffffff"
-                    padding="16px"
-                    boxShadow="lg"
-                    display="flex"
-                    borderRadius="2px"
-                    alignItems="center"
-                  >
-                    <Image
-                      fallbackSrc="https://via.placeholder.com/64"
-                      src={url}
-                      alt={`Album cover: ${trackName}`}
-                      marginRight="16px"
-                    />
-                    <Box flex="1">
-                      <Heading as="h2" size="md">
-                        {trackName}
-                      </Heading>
-                      {playlistTrack && <Text> Votes: {playlistTrack.votes.length} </Text>}
-                      <Text>{artists.map((artist) => artist.name).join(', ')}</Text>
-                    </Box>
-                  </Box>
-                );
-              })}
-            </Stack>
-          </div>
-        )}
+        <Heading marginBottom="16px">Krawumms Player</Heading>
+        {Array.isArray(tracks) && Boolean(tracks.length) && <PartyPlayer tracks={tracks} playlist={playlist} />}
       </Box>
     </Layout>
   );

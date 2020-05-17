@@ -130,11 +130,8 @@ const PartyComponent: FunctionComponent<Props> = ({ party }) => {
                   <Heading as="h2" size="md">
                     {trackName}
                   </Heading>
-
-                  {/* to remove, only for dev/debug */}
-                  <Text>{trackId}</Text>
-                  {playlistTrack && <Text> Votes: {playlistTrack.votes.length} </Text>}
                   <Text>{artists.map((artist) => artist.name).join(', ')}</Text>
+                  {playlistTrack && <Text> Votes: {playlistTrack.votes.length} </Text>}
                 </Box>
                 <Box>
                   <IconButton

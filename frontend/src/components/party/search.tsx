@@ -131,9 +131,6 @@ const Search: FunctionComponent<Props> = () => {
                     {name}
                   </Heading>
 
-                  {/* to remove, only for dev/debug */}
-                  <Text>{id}</Text>
-
                   <Text>{artists.map((artist) => artist.name).join(', ')}</Text>
                 </Box>
                 {partyId !== 0 && (
