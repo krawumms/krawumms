@@ -641,10 +641,10 @@
   dependencies:
     "@types/node" "*"
 
-"@types/mongodb@*", "@types/mongodb@^3.5.15":
-  version "3.5.15"
-  resolved "https://registry.yarnpkg.com/@types/mongodb/-/mongodb-3.5.15.tgz#afe6ec0ee1dda4e732be7af0d487a82ff10a4d16"
-  integrity sha512-Ar1vMe46lA+gmVQShIQzcWmx2W1SrU2PM9FV5XJwNM6+i52y9mP4H5hnuZI748NEJx7EzyZ5v/CWjOYGbjfl+w==
+"@types/mongodb@*", "@types/mongodb@^3.5.17":
+  version "3.5.17"
+  resolved "https://registry.yarnpkg.com/@types/mongodb/-/mongodb-3.5.17.tgz#ada9f38076fb6182b23293af029afb83f4dc8c3d"
+  integrity sha512-pxpy5MIaEZ4Hmc8ijwVXCGYkWgs6w22whNwHmivbNi6NHWMxlR+QzIGeVGTCqfRcJKO6FuaJOYJ4vnYvz/VXAQ==
   dependencies:
     "@types/bson" "*"
     "@types/node" "*"
