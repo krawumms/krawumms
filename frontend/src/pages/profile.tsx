@@ -3,7 +3,7 @@ import { NextPage } from 'next';
 import Link from 'next/link';
 import useSWR from 'swr';
 
-import Layout from '../components/Layout';
+import Layout from '../components/layout';
 import fetcher from '../util/fetcher';
 import withAuth from '../with/auth';
 import config from '../config';

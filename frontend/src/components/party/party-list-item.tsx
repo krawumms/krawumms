@@ -1,146 +1,85 @@
-import React, { FunctionComponent, useContext, useCallback } from 'react';
+import React, { FunctionComponent, useCallback, useState } from 'react';
 
-import {
-  Box,
-  Editable,
-  EditableInput,
-  EditablePreview,
-  Heading,
-  IconButton,
-  Stack,
-  Text,
-  PseudoBox,
-} from '@chakra-ui/core';
+import { Editable, EditableInput, EditablePreview, Flex, Heading, IconButton, Image, Text } from '@chakra-ui/core';
 import Link from 'next/link';
-
-import { mutate } from 'swr';
 import { Party } from '../../interfaces';
-import config from '../../config';
-import fetcher from '../../util/fetcher';
-import { PartyContext } from '../../contexts/PartyContext';
 
 type Props = {
   party: Party;
+  onModifyParty: (id: string, values: { name: string; topic: string }) => void;
+  onPartyDelete: (id: string) => void;
 };
 
-const PartyListItem: FunctionComponent<Props> = ({ party, ...rest }) => {
-  const { name, topic, id } = party;
-  const { partyId, setCurrentPartyId } = useContext(PartyContext);
+const PartyListItem: FunctionComponent<Props> = ({ party, onPartyDelete, onModifyParty }) => {
+  const [partyState, setPartyState] = useState(party);
+  const { name, topic, id, code } = party;
 
-  const onSelectClick = useCallback(() => {
-    setCurrentPartyId(id);
-  }, [id, setCurrentPartyId]);
-
-  const [partyState] = React.useState(party);
   const onDeleteClick = useCallback(async () => {
-    await mutate(`${config.apiBaseUrl}/parties`, async (parties: Party[]) => {
-      await fetcher(`${config.apiBaseUrl}/parties/${id}`, { method: 'DELETE' });
-      return [...parties.filter((_party) => _party.id !== id)];
-    });
-  }, [id]);
+    onPartyDelete(id);
+  }, [id, onPartyDelete]);
 
   const handleChangeSubmit = useCallback(async () => {
-    await mutate(`${config.apiBaseUrl}/parties`, async (parties: Party[]) => {
-      await fetcher(`${config.apiBaseUrl}/parties/${id}`, {
-        method: 'PUT',
-        body: `{"name":"${partyState.name}","topic":"${partyState.topic}"}`,
+    onModifyParty(id, partyState);
+  }, [id, partyState, onModifyParty]);
+
+  const handleTopicChange = useCallback(
+    (newTopic: string) => {
+      setPartyState({
+        ...partyState,
+        topic: newTopic,
       });
-      return [...parties.filter((_party) => _party.id !== id)];
-    });
-  }, [id, partyState.name, partyState.topic]);
+    },
+    [partyState, setPartyState],
+  );
+
+  const handleNameChange = useCallback(
+    (newName: string) => {
+      setPartyState({
+        ...partyState,
+        topic: newName,
+      });
+    },
+    [partyState, setPartyState],
+  );
 
   return (
-    <PseudoBox
-      backgroundColor="#eee"
-      _hover={{ bg: '#ddd' }}
+    <Flex
       padding="16px"
-      borderRadius="1em"
-      display={{ md: 'flex' }}
+      borderRadius="3px"
+      display="flex"
       alignItems="center"
-      /* eslint-disable-next-line react/jsx-props-no-spreading */
-      {...rest}
+      flexDirection="column"
+      boxShadow="0 1px 3px 0 rgba(0,0,0,.1),0 1px 2px 0 rgba(0,0,0,.06)"
+      backgroundColor="#ffffff"
     >
-      <Box
-        display="inline-block"
-        width={[
-          '80%', // base
-          '100%', // 480px upwards
-          '70%', // 768px upwards
-          '80%', // 992px upwards
-        ]}
-      >
-        <Stack spacing="4px">
-          <Heading fontSize="xl">
-            <Editable
-              defaultValue={name}
-              onChange={(e) => {
-                partyState.name = e.toString();
-              }}
-              onSubmit={handleChangeSubmit}
-            >
-              <EditableInput />
-              <EditablePreview />
-            </Editable>
-          </Heading>
-          <Editable
-            defaultValue={topic}
-            onChange={(e) => {
-              partyState.topic = e.toString();
-            }}
-            onSubmit={handleChangeSubmit}
-          >
+      <Image height="64px" width="64px" src={`https://avatars.dicebear.com/api/jdenticon/${party.id}.svg`} />
+      <Flex padding="8px 16px" flex="1" justifyContent="center" alignItems="center" flexDirection="column" width="100%">
+        <Heading fontSize="xl">
+          <Editable defaultValue={name} onChange={handleNameChange} onSubmit={handleChangeSubmit}>
             <EditableInput />
             <EditablePreview />
           </Editable>
-          <Text>{id}</Text>
-        </Stack>
-      </Box>
-      <Box
-        display="inline-block"
-        width={[
-          '20%', // base
-          '100%', // 480px upwards
-          '30%', // 768px upwards
-          '20%', // 992px upwards
-        ]}
-      >
-        {partyId === id ? (
-          <IconButton
-            variantColor="yellow"
-            aria-label="Select Party"
-            size="lg"
-            icon="star"
-            variant="solid"
-            padding="8px"
-            marginRight="8px"
-          />
-        ) : (
-          <IconButton
-            variantColor="yellow"
-            aria-label="Select Party"
-            size="lg"
-            icon="star"
-            variant="outline"
-            onClick={onSelectClick}
-            padding="8px"
-            marginRight="8px"
-          />
-        )}
+        </Heading>
+        <Editable defaultValue={topic} onChange={handleTopicChange} onSubmit={handleChangeSubmit}>
+          <EditableInput />
+          <EditablePreview />
+        </Editable>
+        <Text>Code: {code}</Text>
+      </Flex>
+      <Flex>
         <IconButton
           variantColor="red"
           aria-label="Delete Party"
           size="lg"
           icon="delete"
           onClick={onDeleteClick}
-          padding="8px"
+          margin="8px"
         />
         <Link href="/parties/[id]" as={`/parties/${id}`}>
-          <Box as="a" padding="8px">
-            <IconButton variantColor="green" aria-label="Delete Party" size="lg" icon="search" />
-          </Box>
+          <IconButton variantColor="green" aria-label="Delete Party" size="lg" icon="search" margin="8px" />
         </Link>
-      </Box>
-    </PseudoBox>
+      </Flex>
+    </Flex>
   );
 };
 

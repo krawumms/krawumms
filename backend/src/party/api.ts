@@ -258,9 +258,9 @@ export default fastifyPlugin(async (server, opts, next) => {
 
   server.delete('/parties/:id/playlist', async (request, reply) => {
     try {
-      const { body } = request;
       const {
         params: { id },
+        body,
       } = request;
       const party = await Party.findOne({ id });
 
@@ -268,11 +268,13 @@ export default fastifyPlugin(async (server, opts, next) => {
         reply.send(HttpStatus.NOT_FOUND);
       }
 
+      const track = JSON.parse(body);
+
       const editedParty = await Party.findOneAndUpdate(
         { id },
         {
           $pull: {
-            playlist: body,
+            playlist: track,
           },
         },
         {

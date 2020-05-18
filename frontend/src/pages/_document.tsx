@@ -23,6 +23,19 @@ export default class MyDocument extends Document<Props> {
       <html>
         <Head>
           <style data-emotion-css={ids.join(' ')} dangerouslySetInnerHTML={{ __html: css }} />
+          <link
+            href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Source+Sans+Pro:wght@400;600&display=swap"
+            rel="stylesheet"
+          />
+          <script src="https://sdk.scdn.co/spotify-player.js" />
+          <script
+            dangerouslySetInnerHTML={{
+              __html: `
+            window.onSpotifyWebPlaybackSDKReady = () => {
+              window.Spotify = Spotify;
+            }`,
+            }}
+          />
         </Head>
         <body>
           <Main />

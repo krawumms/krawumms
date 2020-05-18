@@ -1,11 +1,11 @@
-import React, { FunctionComponent, useContext, useEffect, useRef, useState } from 'react';
+import React, { FunctionComponent, useCallback, useContext, useEffect, useReducer } from 'react';
 
-import { MdPlayArrow, MdPause } from 'react-icons/md';
-import Script from 'react-load-script';
-import { Box, Heading, Text, Image, IconButton, Stack } from '@chakra-ui/core';
+import { MdPause, MdPlayArrow } from 'react-icons/md';
+import { Box, Flex, Heading, IconButton, Image, Stack, Text } from '@chakra-ui/core';
+import fetcher from 'isomorphic-unfetch';
 import { Track } from '../../interfaces';
-import { AuthContext } from '../../contexts/AuthContext';
-import SpotifyWebPlayer from '../../util/spotify-web-player';
+import useSpotifyWebPlaybackSdk from '../../hooks/useSpotifyWebPlaybackSdk';
+import { TokenContext } from '../../contexts/token';
 
 type PlaylistTrack = {
   id: string;
@@ -17,92 +17,187 @@ type Props = {
   playlist: PlaylistTrack[] | undefined;
 };
 
+type State = {
+  activeTrack: Track | null;
+  isPlaying: boolean;
+  isInit: boolean;
+  isLoading: boolean;
+};
+
+type Action =
+  | { type: 'TOGGLE_PLAYING' }
+  | { type: 'SET_ACTIVE_TRACK'; track: Track | null }
+  | { type: 'SET_IS_LOADING'; isLoading: boolean }
+  | { type: 'TOGGLE_INIT' };
+
+function reducer(state: State, action: Action): State {
+  switch (action.type) {
+    case 'TOGGLE_PLAYING':
+      return {
+        ...state,
+        isPlaying: !state.isPlaying,
+      };
+    case 'SET_ACTIVE_TRACK':
+      return {
+        ...state,
+        activeTrack: action.track,
+      };
+    case 'TOGGLE_INIT':
+      return {
+        ...state,
+        isInit: !state.isInit,
+      };
+    case 'SET_IS_LOADING':
+      return {
+        ...state,
+        isLoading: action.isLoading,
+      };
+    default:
+      return state;
+  }
+}
+
+const initialState = {
+  isPlaying: false,
+  isInit: true,
+  activeTrack: null,
+  isLoading: false,
+};
+
+let isChangingSong = false;
+
 const PartyPlayer: FunctionComponent<Props> = ({ tracks, playlist }) => {
-  const { accessToken } = useContext(AuthContext);
-  const webPlayer = useRef<SpotifyWebPlayer>();
-  const [isPlaying, setIsPlaying] = useState<boolean>(false);
-  const [isPaused, setIsPaused] = useState<boolean>(true);
-  const [activeTrack, setActiveTrack] = useState<Track>();
+  const [state, dispatch] = useReducer(reducer, initialState);
+  const { accessToken } = useContext(TokenContext);
+
+  const { isPlaying, activeTrack, isLoading, isInit } = state;
+
+  const { deviceId, player } = useSpotifyWebPlaybackSdk({
+    name: 'Krawumms Web Player', // Device that shows up in the spotify devices list
+    // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+    // @ts-ignore
+    getOAuthToken: () => accessToken, // Wherever you get your access token from
+    // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+    // @ts-ignore
+    onPlayerStateChanged: (playerState: {
+      track_window: {
+        previous_tracks: Array<{
+          id: string;
+        }>;
+        current_track: {
+          id: string;
+        };
+      };
+      paused: boolean;
+    }) => {
+      if (
+        playerState &&
+        playerState.track_window.previous_tracks.find((x) => x.id === playerState.track_window.current_track.id) &&
+        isPlaying &&
+        playerState.paused
+      ) {
+        if (!isChangingSong) {
+          isChangingSong = true;
+          // eslint-disable-next-line @typescript-eslint/no-use-before-define
+          handleTrackChanged(tracks.shift() || null);
+        }
+      }
+    },
+  });
+
+  const handleTrackChanged = useCallback(
+    async (track: Track | null) => {
+      dispatch({ type: 'SET_ACTIVE_TRACK', track });
+      const body = {
+        uris: [track?.uri],
+      };
+      await fetcher(`https://api.spotify.com/v1/me/player/play?device_id=${deviceId}`, {
+        method: 'PUT',
+        headers: { Authorization: `Bearer ${accessToken}` },
+        body: JSON.stringify(body),
+      });
+      isChangingSong = false;
+    },
+    [accessToken, deviceId],
+  );
+
+  const handlePause = useCallback(async () => {
+    await fetcher(`https://api.spotify.com/v1/me/player/pause?device_id=${deviceId}`, {
+      method: 'PUT',
+      headers: { Authorization: `Bearer ${accessToken}` },
+    });
+  }, [accessToken, deviceId]);
+
+  const handleResume = useCallback(async () => {
+    await fetcher(`https://api.spotify.com/v1/me/player/play?device_id=${deviceId}`, {
+      method: 'PUT',
+      headers: { Authorization: `Bearer ${accessToken}` },
+    });
+  }, [accessToken, deviceId]);
+
+  const handleTogglePlayer = useCallback(async () => {
+    dispatch({ type: 'TOGGLE_PLAYING' });
+    if (isInit) {
+      dispatch({ type: 'TOGGLE_INIT' });
+      await handleTrackChanged(activeTrack);
+    }
+    if (isPlaying && player) {
+      await handlePause();
+    } else if (!isPlaying && player) {
+      await handleResume();
+    }
+  }, [isInit, isPlaying, player, handleTrackChanged, activeTrack, handlePause, handleResume]);
 
   // album cover url of first song in tracks
   const { url } = activeTrack?.album.images.find(({ height }) => height === 300) || {};
 
-  // eventemitter on trackended?
-
-  const handlePlayback = () => {
-    if (isPlaying) {
-      setIsPaused(!isPaused);
-      return webPlayer.current?.player.togglePlay();
-    }
-    setIsPlaying(true);
-    setIsPaused(false);
-    return activeTrack ? webPlayer.current?.play(activeTrack) : null;
-  };
-
-  const handleScriptLoad = () => {
-    return new Promise((resolve) => {
-      if (window.Spotify) {
-        resolve();
-      } else {
-        window.onSpotifyWebPlaybackSDKReady = resolve;
-      }
-    });
-  };
-
   useEffect(() => {
-    window.onSpotifyWebPlaybackSDKReady = () => {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
-      // @ts-ignore
-      const player = new SpotifyWebPlayer(accessToken.access_token || '');
-      webPlayer.current = player;
-    };
-  }, [accessToken, webPlayer]);
-
-  useEffect(() => {
-    setActiveTrack(tracks.shift());
-  }, [tracks, setActiveTrack]);
+    dispatch({ type: 'SET_ACTIVE_TRACK', track: tracks.shift() || null });
+  }, [tracks]);
 
   return (
-    <Box>
-      <Box
-        padding="16px"
-        display="flex"
-        width="100%"
-        flexDirection="column"
-        alignItems="center"
-        justifyContent="center"
-        backgroundColor="#EDF2F7"
-        marginBottom="24px"
-      >
-        <Script url="https://sdk.scdn.co/spotify-player.js" onLoad={handleScriptLoad} />
-        <Heading fontSize="18px">Currently Playing:</Heading>
+    <Flex width="100%" align="center" flexDirection="column">
+      {!isLoading && activeTrack && (
+        <Box
+          padding="16px"
+          display="flex"
+          width="100%"
+          flexDirection="column"
+          alignItems="center"
+          justifyContent="center"
+          backgroundColor="#EDF2F7"
+          marginBottom="24px"
+        >
+          <Heading fontSize="18px" margin="16px">
+            Currently Playing:
+          </Heading>
 
-        <Image
-          fallbackSrc="https://via.placeholder.com/64"
-          src={url}
-          alt={`Album cover: ${activeTrack?.album}`}
-          margin="16px auto"
-        />
-        <Text fontWeight="700">{activeTrack?.name}</Text>
-        <Text>{activeTrack?.artists.map((artist) => artist.name).join(', ')}</Text>
-        <Box>
-          <IconButton
-            variantColor="blue"
-            aria-label="Pause Track"
-            size="lg"
-            isRound
-            icon={isPaused ? MdPlayArrow : MdPause}
-            onClick={() => handlePlayback()}
-            padding="8px"
-            margin="8px"
+          <Image
+            fallbackSrc="https://via.placeholder.com/64"
+            src={url}
+            alt={`Album cover: ${activeTrack?.album}`}
+            margin="16px auto"
           />
+          <Text fontWeight="700">{activeTrack?.name}</Text>
+          <Text>{activeTrack?.artists.map((artist) => artist.name).join(', ')}</Text>
+          <Box>
+            <IconButton
+              variantColor="blue"
+              aria-label="Pause Track"
+              size="lg"
+              isRound
+              icon={!isPlaying ? MdPlayArrow : MdPause}
+              onClick={handleTogglePlayer}
+              padding="8px"
+              margin="8px"
+            />
+          </Box>
         </Box>
-      </Box>
-      <Text borderBottom="solid 1px black">&nbsp;</Text>
+      )}
       <Text fontSize="2xl" textAlign="center" margin="24px auto">
         Playlist:
       </Text>
-      <Stack backgroundColor="#EDF2F7" maxHeight="500px" overflowY="auto" padding="8px">
+      <Stack backgroundColor="#EDF2F7" maxHeight="500px" overflowY="auto" padding="8px" width={['100%', '75%', '50%']}>
         {tracks.map(({ name: trackName, id: trackId, artists, album: { images } }) => {
           const albumCoverUrl = images.find(({ height }) => height === 64)?.url || '';
           const playlistTrack = playlist && playlist.find((pT) => pT.id === trackId);
@@ -133,8 +228,7 @@ const PartyPlayer: FunctionComponent<Props> = ({ tracks, playlist }) => {
           );
         })}
       </Stack>
-    </Box>
+    </Flex>
   );
 };
-
 export default PartyPlayer;

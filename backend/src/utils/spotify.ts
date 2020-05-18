@@ -1,6 +1,12 @@
 import SpotifyWebApi from 'spotify-web-api-node';
 import config from '../config';
 
+const spotifyApiForUser = new SpotifyWebApi({
+  clientId: config.spotify.clientId,
+  clientSecret: config.spotify.clientSecret,
+  redirectUri: config.spotify.redirectUri,
+});
+
 const spotifyApi = new SpotifyWebApi({
   clientId: config.spotify.clientId,
   clientSecret: config.spotify.clientSecret,
@@ -14,8 +20,8 @@ const createSpotifyApi = async () => {
 };
 
 export const createUserSpotifyApi = async (accessToken: string) => {
-  spotifyApi.setAccessToken(accessToken);
-  return spotifyApi;
+  spotifyApiForUser.setAccessToken(accessToken);
+  return spotifyApiForUser;
 };
 
 export default createSpotifyApi;
