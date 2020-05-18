@@ -47,7 +47,7 @@ server.decorate('auth', async (request, reply) => {
         request.user = body;
       } catch (e) {
         request.log.error(e);
-        reply.code(HttpStatus.INTERNAL_SERVER_ERROR).send();
+        reply.code(e.statusCode).send();
       }
     }
   }

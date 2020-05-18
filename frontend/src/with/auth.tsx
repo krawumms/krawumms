@@ -4,7 +4,6 @@ import * as http from 'http';
 import { NextPage } from 'next';
 import cookie from 'cookie';
 import config from '../config';
-import fetcher from '../util/fetcher';
 
 export async function triggerAuthCodeGrant(res: http.ServerResponse | undefined, asPath: string) {
   // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
@@ -44,6 +43,7 @@ export default (Page: NextPage<any>, triggerAuthCode = true) => {
       // @ts-ignore
       // eslint-disable-next-line no-underscore-dangle
       let accessToken = token;
+      let user;
 
       if (!req) {
         // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
@@ -62,14 +62,17 @@ export default (Page: NextPage<any>, triggerAuthCode = true) => {
         return {};
       }
 
-      let user = null;
-
       if (!hasNoAccessToken) {
-        user = await fetcher(`${config.apiBaseUrl}/me`, {
+        const response = await fetch(`${config.apiBaseUrl}/me`, {
           headers: {
             Authorization: `${accessToken.token_type} ${accessToken.access_token}`,
           },
         });
+        if (response.status === 401) {
+          await triggerAuthCodeGrant(res, context.asPath);
+        }
+
+        user = response.json();
       }
 
       // eslint-disable-next-line @typescript-eslint/ban-ts-ignore

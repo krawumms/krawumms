@@ -4,12 +4,6 @@
 //
 // import User from 'path/to/interfaces';
 
-export type Todo = {
-  id: number;
-  text: string;
-  done: boolean;
-};
-
 export type Track = {
   id: string;
   uri: string;
@@ -27,7 +21,7 @@ export type Track = {
 };
 
 export type Party = {
-  id: number;
+  id: string;
   name: string;
   topic: string;
   code: string;
