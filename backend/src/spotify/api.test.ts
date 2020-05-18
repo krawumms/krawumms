@@ -1,6 +1,5 @@
 import request from 'supertest';
 import HttpStatus from 'http-status-codes';
-
 import server from '../server';
 
 describe('Test search api', () => {
