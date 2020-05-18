@@ -2220,10 +2220,10 @@ fastify-blipp@^2.3.1:
     chalk "^2.4.2"
     fastify-plugin "^1.6.0"
 
-fastify-cookie@^3.6.0:
-  version "3.6.0"
-  resolved "https://registry.yarnpkg.com/fastify-cookie/-/fastify-cookie-3.6.0.tgz#0c83fa0452a15a4be40eeae56b87676c7146dbf6"
-  integrity sha512-pvGzhtBIHP3NG/EWpf7WGzMjY+ur31uJ7XA2tz7iMpbl+T43pUM8WtDVMVoDAH1AJ3RAvSdVk58vZiqO4jUVfA==
+fastify-cookie@^3.6.1:
+  version "3.6.1"
+  resolved "https://registry.yarnpkg.com/fastify-cookie/-/fastify-cookie-3.6.1.tgz#560495c28e381f71f7ac86fbb9f43fd637a182fe"
+  integrity sha512-kADZepeHYlq9IsiqaVrhVJ5qsESaotOEzfRcauChhkCWnSnA20WRHzkeofu7ByqNOeodEDWwz7N5sDJ55DOIGw==
   dependencies:
     cookie "^0.4.0"
     cookie-signature "^1.1.0"
