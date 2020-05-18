@@ -74,7 +74,6 @@ describe('Test party api', () => {
   it('Should return all Parties', async () => {
     const response = await request(server.server).get('/parties').set('Authorization', bearer).send();
     expect(response.status).toEqual(OK);
-    console.log(response.body);
     expect(response.body.length).toBe(3);
   });
 
@@ -94,13 +93,13 @@ describe('Test party api', () => {
   it('Should return 404 for invalid ID in GET', async () => {
     const response = await request(server.server).get('/parties/1111').send();
     expect(response.status).toEqual(OK);
-    expect(response.body).toEqual(404);
+    expect(response.body).toEqual(NOT_FOUND);
   });
 
   it('Should return 404 for invalid ID in DELETE', async () => {
     const response = await request(server.server).delete('/parties/1111').send();
     expect(response.status).toEqual(OK);
-    expect(response.body).toEqual(404);
+    expect(response.body).toEqual(NOT_FOUND);
   });
 
   it('Should add song to playlist', async () => {
@@ -129,9 +128,9 @@ describe('Test party api', () => {
   });
 
   it('Should return 404 for invalid ID in PUT', async () => {
-    const response = await request(server.server).put('/parties/1111').set('Authorization', 'Bearer abcd').send();
+    const response = await request(server.server).put('/parties/1111').send();
     expect(response.status).toEqual(OK);
-    expect(response.body).toEqual(404);
+    expect(response.body).toEqual(NOT_FOUND);
   });
 
   it('Should make an upvote on a track', async () => {
