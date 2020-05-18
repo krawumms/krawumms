@@ -18,7 +18,7 @@
     "fastify-plugin": "^1.6.1",
     "fastify-swagger": "^2.5.1",
     "http-status-codes": "^1.4.0",
-    "mongoose": "^5.9.11",
+    "mongoose": "^5.9.14",
     "mongoose-hidden": "^1.9.0",
     "mongoose-timestamp": "^0.6.0",
     "node-fetch": "^2.6.0",
