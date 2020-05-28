@@ -117,10 +117,10 @@ const PartyComponent: FunctionComponent<Props> = ({ party }) => {
           {name}
         </Heading>
         <Stack spacing="4px">
-          <Text>{topic}</Text>
-          <Text>Code: {code}</Text>
-          <Text>{createdAt}</Text>
-          <Text>{updatedAt}</Text>
+          <Text textAlign="center">{topic}</Text>
+          <Text textAlign="center">Code: {code}</Text>
+          <Text textAlign="center">{createdAt}</Text>
+          <Text textAlign="center">{updatedAt}</Text>
         </Stack>
         <NextLink href="/parties/[id]/player" as={`/parties/${id}/player`}>
           <Button display="flex" alignItems="center">
