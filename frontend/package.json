@@ -26,7 +26,7 @@
     "emotion-server": "^10.0.27",
     "emotion-theming": "^10.0.27",
     "eslint-plugin-cypress": "^2.10.3",
-    "final-form": "^4.19.1",
+    "final-form": "^4.20.0",
     "http-status-codes": "^1.4.0",
     "isomorphic-unfetch": "3.0.0",
     "next": "9.4.1",
