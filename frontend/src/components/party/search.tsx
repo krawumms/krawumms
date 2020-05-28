@@ -2,7 +2,7 @@ import React, { FunctionComponent, useCallback, useState } from 'react';
 import useFetch from 'use-http';
 import queryString from 'querystring';
 import Autosuggest from 'react-autosuggest';
-import { Box, Heading, Image, Text } from '@chakra-ui/core';
+import { Box, Heading, Image, Stack, Text } from '@chakra-ui/core';
 import { Track } from '../../interfaces';
 
 type Props = {
@@ -78,33 +78,41 @@ const SearchPage: FunctionComponent<Props> = ({ onAddClick }) => {
   };
 
   return (
-    <Box padding="16px" display="flex" flexDirection="column" alignItems="center" justifyContent="center">
+    <Box
+      padding="16px"
+      display="flex"
+      flexDirection="column"
+      alignItems="center"
+      justifyContent="center"
+      width={['100%', '75%', '50%']}
+    >
       <Heading as="h1">Search tracks on Spotify</Heading>
-      <Box>
-        <Autosuggest
-          suggestions={tracks}
-          onSuggestionsFetchRequested={handleQueryChange}
-          onSuggestionsClearRequested={handleClear}
-          getSuggestionValue={getTrackValue}
-          renderSuggestion={renderTrack}
-          inputProps={inputProps}
-        />
-      </Box>
+      <Autosuggest
+        suggestions={tracks}
+        onSuggestionsFetchRequested={handleQueryChange}
+        onSuggestionsClearRequested={handleClear}
+        getSuggestionValue={getTrackValue}
+        renderSuggestion={renderTrack}
+        inputProps={inputProps}
+      />
       <style jsx global>
         {`
           .react-autosuggest__container {
             position: relative;
+            width: 100%;
+            margin: 32px 0;
           }
 
           .react-autosuggest__input {
-            width: 240px;
+            width: 100%;
             height: 30px;
             padding: 10px 20px;
-            font-family: Helvetica, sans-serif;
-            font-weight: 300;
+            font-weight: 400;
             font-size: 16px;
             border: 1px solid #aaa;
-            border-radius: 4px;
+            border-radius: 3px;
+            padding: 24px 12px;
+            background-color: #edf2f7;
           }
 
           .react-autosuggest__input--focused {
@@ -124,7 +132,7 @@ const SearchPage: FunctionComponent<Props> = ({ onAddClick }) => {
             display: block;
             position: absolute;
             top: 51px;
-            width: 280px;
+            width: 100%;
             border: 1px solid #aaa;
             background-color: #fff;
             font-family: Helvetica, sans-serif;

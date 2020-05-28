@@ -197,7 +197,7 @@ const PartyPlayer: FunctionComponent<Props> = ({ tracks, playlist }) => {
       <Text fontSize="2xl" textAlign="center" margin="24px auto">
         Playlist:
       </Text>
-      <Stack backgroundColor="#EDF2F7" maxHeight="500px" overflowY="auto" padding="8px" width={['100%', '75%', '50%']}>
+      <Stack backgroundColor="#EDF2F7" maxHeight="500px" overflowY="auto" padding="8px" width={['100%', '75%', '65%']}>
         {tracks.map(({ name: trackName, id: trackId, artists, album: { images } }) => {
           const albumCoverUrl = images.find(({ height }) => height === 64)?.url || '';
           const playlistTrack = playlist && playlist.find((pT) => pT.id === trackId);
@@ -210,6 +210,7 @@ const PartyPlayer: FunctionComponent<Props> = ({ tracks, playlist }) => {
               display="flex"
               borderRadius="2px"
               alignItems="center"
+              flexShrink={0}
             >
               <Image
                 fallbackSrc="https://via.placeholder.com/64"

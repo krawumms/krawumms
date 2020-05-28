@@ -131,7 +131,7 @@ const PartyComponent: FunctionComponent<Props> = ({ party }) => {
       <Search onAddClick={onAddClick} />
       {Array.isArray(tracks) && Boolean(tracks.length) && (
         <Stack
-          width={['100%', '75%', '50%']}
+          width={['100%', '75%', '65%']}
           backgroundColor="#EDF2F7"
           maxHeight="500px"
           overflowY="auto"
@@ -150,6 +150,7 @@ const PartyComponent: FunctionComponent<Props> = ({ party }) => {
                 flexDirection={{ base: 'column', md: 'row' }}
                 borderRadius="2px"
                 alignItems="center"
+                flexShrink={0}
               >
                 <Image
                   fallbackSrc="https://via.placeholder.com/64"
