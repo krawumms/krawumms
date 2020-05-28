@@ -2,7 +2,7 @@ import React, { FunctionComponent, useCallback, useState } from 'react';
 import useFetch from 'use-http';
 import queryString from 'querystring';
 import Autosuggest from 'react-autosuggest';
-import { Box, Heading, Image, Stack, Text } from '@chakra-ui/core';
+import { Box, Heading, Image, Text } from '@chakra-ui/core';
 import { Track } from '../../interfaces';
 
 type Props = {
