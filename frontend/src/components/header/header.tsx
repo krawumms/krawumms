@@ -35,16 +35,18 @@ const Header = () => {
         </Box>
       </Flex>
 
-      <Box
-        display={{ sm: show ? 'block' : 'none', md: 'flex' }}
-        width={{ sm: 'full', md: 'auto' }}
-        alignItems="center"
-        flexGrow={1}
-      >
-        <HeaderItem>
-          <HeaderLink href="/parties">Parties</HeaderLink>
-        </HeaderItem>
-      </Box>
+      {show && (
+        <Box
+          display={{ sm: show ? 'block' : 'none', md: 'flex' }}
+          width={{ sm: 'full', md: 'auto' }}
+          alignItems="center"
+          flexGrow={1}
+        >
+          <HeaderItem>
+            <HeaderLink href="/parties">Parties</HeaderLink>
+          </HeaderItem>
+        </Box>
+      )}
       <style jsx>
         {`
           :global(.header__logo) {
