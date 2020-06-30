@@ -994,10 +994,10 @@ auth-header@^1.0.0:
   resolved "https://registry.yarnpkg.com/auth-header/-/auth-header-1.0.0.tgz#ea24fdc5588e1eb8b750df8655a396aa48fc9076"
   integrity sha512-CPPazq09YVDUNNVWo4oSPTQmtwIzHusZhQmahCKvIsk0/xH6U3QsMAv3sM+7+Q0B1K2KJ/Q38OND317uXs4NHA==
 
-avvio@^6.3.1:
-  version "6.3.1"
-  resolved "https://registry.yarnpkg.com/avvio/-/avvio-6.3.1.tgz#201ec26505551657272cda90c23ef1cb0c7e390a"
-  integrity sha512-jfcOyzK+TVBRae/FrIhlgVIDcGzRzIyDvOq+5e1IkxY141QSVZoe9kKhOwLdYkDBCkOQT6JU/53NkJY0qNrpqw==
+avvio@^6.4.1:
+  version "6.4.1"
+  resolved "https://registry.yarnpkg.com/avvio/-/avvio-6.4.1.tgz#bb4127ca8b9b9c322d742a9b40962dfdca5d68b1"
+  integrity sha512-jeZaUK+F7MuWSNT3VHfltskPJZKqVeTWQqBA4SDaDoLaQ0lb5TOgLeQT1BEuhTIUNISCDCGY3zjYyVmQQ48gKA==
   dependencies:
     archy "^1.0.0"
     debug "^4.0.0"
@@ -2254,14 +2254,14 @@ fastify-swagger@^2.5.1:
     fastify-static "^2.5.1"
     js-yaml "^3.12.1"
 
-fastify@^2.14.0:
-  version "2.14.0"
-  resolved "https://registry.yarnpkg.com/fastify/-/fastify-2.14.0.tgz#296c300884bf9dbf403bac1723f3ae0f0325dfe4"
-  integrity sha512-uofJOU9Zf20iklDrACZZVe+qef6dswOe8IUnxUdHTY9QfHv301MgPxodvJFiRE2WAse7YrWr4sI5Lx6YIAuUAA==
+fastify@^2.15.1:
+  version "2.15.1"
+  resolved "https://registry.yarnpkg.com/fastify/-/fastify-2.15.1.tgz#195a068bca87c7b57a83fe81f0aa66e86c6a3992"
+  integrity sha512-pEE1pa5j/vtZeZTbPpFgsJgzLbThcYgiLDw2yZIG8qNZ5LkF1Ew2vbv9k3nTXNxGEPYFBbyNTCKRSj3JbX+FhA==
   dependencies:
     abstract-logging "^2.0.0"
     ajv "^6.12.0"
-    avvio "^6.3.1"
+    avvio "^6.4.1"
     fast-json-stringify "^1.18.0"
     find-my-way "^2.2.2"
     flatstr "^1.0.12"
