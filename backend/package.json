@@ -11,7 +11,7 @@
     "auth-header": "^1.0.0",
     "axios": "^0.19.2",
     "debug": "^4.1.1",
-    "fastify": "^2.14.0",
+    "fastify": "^3.0.3",
     "fastify-blipp": "^2.3.1",
     "fastify-cookie": "^3.6.0",
     "fastify-cors": "^3.0.3",
