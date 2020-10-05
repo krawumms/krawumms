@@ -16,7 +16,7 @@
     "fastify-cookie": "^3.6.0",
     "fastify-cors": "^3.0.3",
     "fastify-plugin": "^1.6.1",
-    "fastify-swagger": "^2.5.1",
+    "fastify-swagger": "^3.4.0",
     "http-status-codes": "^1.4.0",
     "mongoose": "^5.9.11",
     "mongoose-hidden": "^1.9.0",
