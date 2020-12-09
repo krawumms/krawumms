@@ -39,7 +39,7 @@
     "react-load-script": "^0.0.6",
     "spotify-web-api-node": "^4.0.0",
     "use-http": "^1.0.12",
-    "uuid": "^8.0.0"
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
     "@types/cookie": "^0.4.0",
