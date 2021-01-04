@@ -9,7 +9,7 @@
   "private": false,
   "dependencies": {
     "auth-header": "^1.0.0",
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "debug": "^4.1.1",
     "fastify": "^2.14.0",
     "fastify-blipp": "^2.3.1",
