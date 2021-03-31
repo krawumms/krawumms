@@ -38,7 +38,7 @@
     "react-icons": "^3.10.0",
     "react-load-script": "^0.0.6",
     "spotify-web-api-node": "^4.0.0",
-    "use-http": "^1.0.12",
+    "use-http": "^1.0.19",
     "uuid": "^8.0.0"
   },
   "devDependencies": {
